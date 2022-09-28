@@ -4,23 +4,26 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace BlackJack
+namespace BlackJack.Printing
 {
     public struct CardPrintout
     {
         public string TextOutput;
         public ConsoleColor Color;
 
-        public CardPrintout(string textOutput, ConsoleColor color) {
+        public CardPrintout(string textOutput, ConsoleColor color)
+        {
             TextOutput = textOutput;
             Color = color;
         }
 
-        public static CardPrintout Printout(string textOutput) {
+        public static CardPrintout Printout(string textOutput)
+        {
             return new CardPrintout(textOutput, ConsoleColor.White);
         }
 
-        public static CardPrintout PrintoutCard(string textOutput, ConsoleColor color) {
+        public static CardPrintout PrintoutCard(string textOutput, ConsoleColor color)
+        {
             return new CardPrintout(textOutput, color);
         }
 

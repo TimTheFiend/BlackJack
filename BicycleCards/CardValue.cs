@@ -1,4 +1,4 @@
-﻿namespace BlackJack
+﻿namespace BlackJack.BicycleCards
 {
     public enum CardValue
     {

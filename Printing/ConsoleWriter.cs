@@ -4,24 +4,29 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
+using BlackJack.BicycleCards;
 
-namespace BlackJack
+namespace BlackJack.Printing
 {
     public static class ConsoleWriter
     {
-        public static void Writeline(string output) {
+        public static void Writeline(string output)
+        {
             ResetConsoleColor();
             Console.WriteLine(output);
         }
 
-        public static void WriteCard(Card card) {
-            Console.ForegroundColor = ((int)card.Suit) % 2 == 0 ? CardPrintout.CardBlack : CardPrintout.CardRed;
+        public static void WriteCard(Card card)
+        {
+            Console.ForegroundColor = card.getColor;
             Console.WriteLine(card.getValueAndSuit);
 
             ResetConsoleColor();
         }
-        public static void WriteCard(params Card[] cards) {
-            foreach (Card card in cards) {
+        public static void WriteCard(params Card[] cards)
+        {
+            foreach (Card card in cards)
+            {
                 Console.ForegroundColor = card.getColor;
                 Console.Write(card.getValueAndSuit);
             }
@@ -29,7 +34,8 @@ namespace BlackJack
             ResetConsoleColor();
         }
 
-        public static void Writeline(CardPrintout cardPrintout) {
+        public static void Writeline(CardPrintout cardPrintout)
+        {
             Console.ForegroundColor = cardPrintout.Color;
             Console.WriteLine(cardPrintout.TextOutput);
 
@@ -38,8 +44,10 @@ namespace BlackJack
 
 
         // Note: Does not add spaces between prints.
-        public static void Writeline(params CardPrintout[] cardPrintouts) {
-            foreach (CardPrintout item in cardPrintouts) {
+        public static void Writeline(params CardPrintout[] cardPrintouts)
+        {
+            foreach (CardPrintout item in cardPrintouts)
+            {
                 Console.ForegroundColor = item.Color;
                 Console.Write(item.TextOutput);
             }
@@ -47,7 +55,8 @@ namespace BlackJack
             ResetConsoleColor();
         }
 
-        private static void ResetConsoleColor() {
+        private static void ResetConsoleColor()
+        {
             Console.ForegroundColor = ConsoleColor.White;
         }
     }

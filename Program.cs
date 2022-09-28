@@ -1,33 +1,24 @@
 ﻿// See https://aka.ms/new-console-template for more information
-using BlackJack;
-
+using BlackJack.BicycleCards;
+using BlackJack.Printing;
 
 Deck deck = new Deck();
 //deck.PrintDebug();
 
-while (deck.cards.Count > 0) {
-ConsoleWriter.WriteCard(deck.DrawCard());
-}
+
+Card card1 = deck.cards[0];     // Ace
+Card card2 = deck.cards[10];    //
+Card card3 = deck.cards[2];
+Card card4 = deck.cards[13];
 
 
 
-//// OLD Test
-//Card newCard = new Card(CardSuit.Hearts, CardValue.Jack);
-//Card newCard2 = new Card(CardSuit.Hearts, CardValue.Jack, false);
-//Console.WriteLine(newCard.getSuitAndValue);
-//Console.WriteLine(newCard.getValueAndSuit);
-//Console.WriteLine(newCard2.getSuitAndValue);
-//Console.WriteLine(newCard2.getValueAndSuit);
+Console.WriteLine(card1);
+Console.WriteLine(card2);
+Console.WriteLine(card3);
+Console.WriteLine(card4);
+var hehe = Card.CalculateCardValue(card1, card2, card3, card4);
+var hehe2 = Card.CalculateCardValue(card1, card3, card4);
 
-//ConsoleWriter.Writeline("Hello world");
-
-//List<CardPrintout> printouts = new List<CardPrintout>();
-//printouts.Add(CardPrintout.Printout("Hello"));
-//printouts.Add(CardPrintout.PrintoutCard("World", CardPrintout.CardRed));
-//printouts.Add(CardPrintout.Printout("paaaaaaaaaaaaaaaaaaaaaaaaaaaain"));
-//printouts.Add(CardPrintout.PrintoutCard("haha jk", CardPrintout.CardBlack));
-//Console.WriteLine();
-//Console.WriteLine();
-//Console.WriteLine();
-//Console.WriteLine();
-//ConsoleWriter.Writeline(printouts.ToArray());
+Console.WriteLine(hehe);
+Console.WriteLine(hehe2);
