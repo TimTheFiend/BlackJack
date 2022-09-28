@@ -17,6 +17,9 @@ namespace BlackJack.Participant
             cards = new List<Card>();
         }
 
+        /// <summary>
+        /// Re-initialises <see cref="hand"/> and <see cref="cards"/>.
+        /// </summary>
         public void InitialiseForNewRound() {
             hand = new Hand();
             cards = new List<Card>();

@@ -8,6 +8,7 @@ using BlackJack.BicycleCards;
 
 namespace BlackJack.Printing
 {
+    //TODO Take another look at this, remove any redundant functions.
     public static class ConsoleWriter
     {
         public static void Writeline(string output)
