@@ -1,15 +1,15 @@
 ﻿// See https://aka.ms/new-console-template for more information
 using BlackJack.BicycleCards;
-using BlackJack.Printing;
+
 
 Deck deck = new Deck();
 //deck.PrintDebug();
 
 
 Card card1 = deck.cards[0];     // Ace
-Card card2 = deck.cards[10];    //
-Card card3 = deck.cards[2];
-Card card4 = deck.cards[13];
+Card card2 = deck.cards[10];    // Jack
+Card card3 = deck.cards[2];     // 3
+Card card4 = deck.cards[13];    // Ace
 
 
 

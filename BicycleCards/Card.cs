@@ -97,6 +97,7 @@ namespace BlackJack.BicycleCards
         public ConsoleColor getColor => (int)Suit % 2 == 0 ? CardPrintout.CardBlack : CardPrintout.CardRed;
         #endregion
 
+        //REMOVE
         public static int CalculateCardValue(params Card[] cards) {
             int amountAce = 0;
             int totalValue = 0;
@@ -126,12 +127,13 @@ namespace BlackJack.BicycleCards
             return totalValue;
         }
 
+        //REMOVE
         private static bool IsHandBust(int value) {
             int maxHandValue = 21;
             return value > maxHandValue;
         }
 
-
+        //REMOVE
         private static bool IsHandBust(int totalValue, Card card, out int _totalValue) {
             //Avoid magic number
             int maxHandValue = 21;
