@@ -15,6 +15,7 @@ namespace BlackJack
         public bool IsPlayerTurn { get; private set; } = true;
         private GamePhase phase { get; set; } = GamePhase.NONE;
         private Deck deck;
+        private delegate void ActionHandler();
 
 
         public TheHouse() {
@@ -24,43 +25,47 @@ namespace BlackJack
 
 
         public void GameplayLoop() {
-            bool isStillRunning = true;
-
-            while (isStillRunning) {
+            ActionHandler actionHandler;
+            while (true) {
                 switch (phase) {
                     case GamePhase.NONE:
-                        GamePhaseNone(out isStillRunning);
+                        //GamePhaseNone();
+                        actionHandler = GamePhaseNone;
                         break;
                     case GamePhase.BET:
-                        GamePhaseBet(out isStillRunning);
+                        actionHandler = GamePhaseBet;
                         break;
                     case GamePhase.SHUFFLE:
-                        GamePhaseShuffle(out isStillRunning);
+                        actionHandler = GamePhaseShuffle;
                         break;
                     case GamePhase.DEAL:
-                        GamePhaseDeal(out isStillRunning);
+                        actionHandler = GamePhaseDeal;
                         break;
                     case GamePhase.PLAY:
-                        GamePhasePlay(out isStillRunning);
+                        actionHandler = GamePhasePlay;
                         break;
                     case GamePhase.SETTLEMENT:
-                        GamePhaseSettlement(out isStillRunning);
+                        actionHandler = GamePhaseSettlement;
                         break;
                 }
+                actionHandler();
             }
-
-            Console.WriteLine("-----ENDING GAMEPLAYLOOP-----");
         }
 
-        
-        private BlackJackAction HandlePlayerInput(List<BlackJackAction> actions, params string[] textToPlayer) {
+        /// <summary>
+        /// Writes instructions to, and handles reading player input. 
+        /// </summary>
+        /// <param name="actions">Array of possible actions the player can make.</param>
+        /// <param name="textToPlayer">Instructions to the player</param>
+        /// <returns>Action to be performed.</returns>
+        private BlackJackAction HandlePlayerInput(BlackJackAction[] actions, params string[] textToPlayer) {
             char exitGameInput = 'q';
             foreach (string text in textToPlayer) {
                 ConsoleWriter.Writeline(text);
             }
 
             //Print actions to player
-            for (int i = 0; i < actions.Count; i++) {
+            for (int i = 0; i < actions.Length; i++) {
                 ConsoleWriter.WriteActionToPlayer($"{i + 1}) - {actions[i]}");
             }
             ConsoleWriter.ExitGameOption();
@@ -70,14 +75,13 @@ namespace BlackJack
             while (true) {
                 var initialInput = Console.ReadKey(true).KeyChar;
                 if (int.TryParse(initialInput.ToString(), out int userInput)) {
-                    if (userInput > 0 && userInput <= actions.Count) {
+                    if (userInput > 0 && userInput <= actions.Length) {
                         return actions[userInput - 1];
                     }
                 }
                 //Closes application.
                 if (char.ToUpperInvariant(initialInput) == char.ToUpperInvariant(exitGameInput)) {
-                    ConsoleWriter.OnBlackJackExit();
-                    Environment.Exit(0);
+                    HandleExitGame();
                 }
 
                 ConsoleWriter.InvalidInput();
@@ -86,30 +90,67 @@ namespace BlackJack
 
 
         #region GamePhase management
-        //TODO
-        private void GamePhaseNone(out bool isStillRunning) {
-            isStillRunning = true;
+        private void GamePhaseNone() {
+            #region Formula
+            string[] msgs = new string[] {
+                "Welcome to the Black Jack table!",
+                "Presumably you're here for black jack, still...",
+                "What would you like to do?"
+            };
+            BlackJackAction[] actions = new BlackJackAction[] {
+                BlackJackAction.BET
+            };
+            #endregion
+
+            BlackJackAction playerAction = HandlePlayerInput(actions, msgs);
         }
 
-        private void GamePhaseBet(out bool isStillRunning) {
-            isStillRunning = true;
+        //TODO: Unique phase, make seperate handler
+        private void GamePhaseBet() {
         }
 
-        private void GamePhaseShuffle(out bool isStillRunning) {
-            isStillRunning = true;
+        //TODO: Doesn't require any input from player
+        private void GamePhaseShuffle() {
         }
 
-        private void GamePhaseDeal(out bool isStillRunning) {
-            isStillRunning = true;
+        //TODO: Handle blackjack + Insurance
+        private void GamePhaseDeal() {
         }
 
-        private void GamePhasePlay(out bool isStillRunning) {
-            isStillRunning = true;
+        private void GamePhasePlay() {
+            #region Formula
+            string[] msgs = new string[] {
+                "CURRENT PHASE = THE_PLAY"
+            };
+            BlackJackAction[] actions = new BlackJackAction[] {
+                BlackJackAction.STAND,
+                BlackJackAction.HIT
+            };
+            #endregion
+            //TODO: Check if player could DOUBLE_DOWN or SPLIT_PAIRS
+
         }
 
-        private void GamePhaseSettlement(out bool isStillRunning) {
-            isStillRunning = true;
+        /*TODO
+         * - Calculate who wins
+         * - Calculate payout
+         */
+        private void GamePhaseSettlement() {
         }
+
+
         #endregion GamePhase management
+
+        #region Handling BlackJackActions
+
+        /// <summary>
+        /// Handles the behavior of <see cref="BlackJackAction.EXIT_GAME"/>.
+        /// </summary>
+        private void HandleExitGame() {
+            ConsoleWriter.OnBlackJackExit();
+            Environment.Exit(0);
+        }
+
+        #endregion
     }
 }

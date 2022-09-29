@@ -34,7 +34,7 @@ namespace BlackJack.Printing
         }
 
         public static void OnBlackJackExit() {
-            ConsoleWriter.Writeline("COWARD");
+            ConsoleWriter.Writeline("You're leaving? You came to my black jack table, and you're leaving?");
         }
 
         public static void WriteCard(Card card)
