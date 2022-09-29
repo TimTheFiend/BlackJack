@@ -11,7 +11,7 @@ namespace BlackJack.BicycleCards
     {
         public List<Card> cards { get; private set; }
         private int cardsLeft => cards.Count;
-        private bool isShuffleNeeded => cardsLeft < 20;  //Value is arbitrary. The most amount of cards a player can get is 11 without going over 21.
+        public bool isShuffleNeeded => cardsLeft < 20;  //Value is arbitrary. The most amount of cards a player can get is 11 without going over 21.
 
         public Deck()
         {
@@ -48,6 +48,11 @@ namespace BlackJack.BicycleCards
                 cards[i] = cards[pos];
                 cards[pos] = temp;
             }
+        }
+
+        public void ReshuffleDeck() {
+            GenerateDeck();
+            ShuffleDeck();
         }
 
         // TODO: Redo

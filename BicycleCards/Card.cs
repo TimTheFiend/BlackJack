@@ -46,16 +46,17 @@ namespace BlackJack.BicycleCards
             }
         }
 
-
-
-        #region Console Print properties
-        // Don't know how much - if at all - this is gonna be used.
-        public override string ToString()
-        {
-            return IsFaceUp ? $"{Value} of {Suit}" : "X of X";
-            //return $"{this.Value} of {this.Suit}";
+        public Card SetFaceDown() {
+            IsFaceUp = false;
+            return this;
         }
 
+        public Card SetFaceUp() {
+            IsFaceUp = true;
+            return this;
+        }
+
+        #region Console Print properties
         public string getSuitAndValue => IsFaceUp ? $"{GetSuitUnicode}{GetValueChar}" : faceDownReturnString;
 
         public string getValueAndSuit => IsFaceUp ? $"{GetValueChar}{GetSuitUnicode}" : faceDownReturnString;
@@ -94,6 +95,7 @@ namespace BlackJack.BicycleCards
             }
         }
 
+        //TODO Fix so it doesn't show color when IsFaceUp is false
         public ConsoleColor getColor => (int)Suit % 2 == 0 ? CardPrintout.CardBlack : CardPrintout.CardRed;
         #endregion
 

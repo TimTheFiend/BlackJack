@@ -44,12 +44,28 @@ namespace BlackJack.Printing
 
             ResetConsoleColor();
         }
+
+        public static void OnShuffle() {
+            ConsoleWriter.Writeline("Shuffling deck");
+        }
+
         public static void WriteCard(params Card[] cards)
         {
             foreach (Card card in cards)
             {
                 Console.ForegroundColor = card.getColor;
-                Console.Write(card.getValueAndSuit);
+                Console.Write($"[{card.getValueAndSuit}]");
+            }
+            Console.WriteLine();
+            ResetConsoleColor();
+        }
+
+        public static void WriteCard(string player, params Card[] cards) {
+            ResetConsoleColor();
+            Console.Write($"{player}:\t");
+            foreach (Card card in cards) {
+                Console.ForegroundColor = card.getColor;
+                Console.Write($"[{card.getValueAndSuit}]");
             }
             Console.WriteLine();
             ResetConsoleColor();

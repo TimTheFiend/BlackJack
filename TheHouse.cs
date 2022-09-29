@@ -12,16 +12,58 @@ namespace BlackJack
 {
     public class TheHouse
     {
-        public bool IsPlayerTurn { get; private set; } = true;
-        private GamePhase phase { get; set; } = GamePhase.NONE;
+        public bool IsPlayerTurn { get; private set; }  //True if Player; otherwise Dealer
+        public Dealer dealer;
+        public Player player;
+        private GamePhase phase { get; set; }
         private Deck deck;
+
+        public bool isDeckPlayable => !deck.isShuffleNeeded;
+
         private delegate void ActionHandler();
 
-
         public TheHouse() {
+            //Set local variables
+            IsPlayerTurn = true;
+            phase = GamePhase.NONE;
+            dealer = new Dealer();
+            player = new Player();
+            //Instantiate deck
             deck = new Deck();
+
+            //NOTE
+            deck.ShuffleDeck();
         }
 
+        public void EndTurn() {
+            IsPlayerTurn = !IsPlayerTurn;
+        }
+
+        //CURRENT PHASE = THE PLAY
+        public void DealerPlayLoop() {
+            bool IS_DEBUGGING = true;
+            if (IS_DEBUGGING) {
+                GamePhaseDeal();
+            }
+
+            //Dealer reveals the facedown card
+            //TODO: CURRENTLY CRASHES BECAUSE THE LOOP SKIPS TO PLAY
+            dealer.hand.TurnCardFaceUp();
+            ConsoleWriter.WriteCard(dealer.getHand.ToArray());
+            while (dealer.canHit) {
+                dealer.Hit(deck.DrawCard());
+                ConsoleWriter.WriteCard(dealer.getHand.ToArray());
+            }
+            if (dealer.isBust) {
+                ConsoleWriter.Writeline("WHOOPS");
+                ConsoleWriter.Writeline($"DEALER: {dealer.getHandValue}");
+            }
+            else {
+                dealer.Stand();
+                ConsoleWriter.Writeline("DEALER STANDS");
+                ConsoleWriter.Writeline($"DEALER: {dealer.getHandValue}");
+            }
+        }
 
 
         public void GameplayLoop() {
@@ -29,7 +71,6 @@ namespace BlackJack
             while (true) {
                 switch (phase) {
                     case GamePhase.NONE:
-                        //GamePhaseNone();
                         actionHandler = GamePhaseNone;
                         break;
                     case GamePhase.BET:
@@ -47,6 +88,8 @@ namespace BlackJack
                     case GamePhase.SETTLEMENT:
                         actionHandler = GamePhaseSettlement;
                         break;
+                    default:
+                        throw new Exception("TheHouse.phase doesn't have a value.\n\tI don't know how, but it really shouldn't be possible.");
                 }
                 actionHandler();
             }
@@ -111,10 +154,34 @@ namespace BlackJack
 
         //TODO: Doesn't require any input from player
         private void GamePhaseShuffle() {
+            if (deck.isShuffleNeeded) {
+                ConsoleWriter.OnShuffle();
+                deck.ReshuffleDeck();
+            }
         }
 
         //TODO: Handle blackjack + Insurance
         private void GamePhaseDeal() {
+            ConsoleWriter.Writeline("====DEAL====");
+            int startingHandSize = 2;
+
+            for (int i = 0; i < startingHandSize; i++) {
+                //Player gets card
+                player.hand.AddCard(deck.DrawCard());
+                ConsoleWriter.WriteCard(player.ToString(), player.getHand.ToArray());
+
+
+
+                Card dealerCard = deck.DrawCard();
+
+                if (dealer.hand.handSize == 0) {
+                    dealerCard = dealerCard.SetFaceDown();
+                }
+                dealer.hand.AddCard(dealerCard);
+                ConsoleWriter.WriteCard(dealer.ToString(), dealer.getHand.ToArray());
+            }
+
+
         }
 
         private void GamePhasePlay() {
