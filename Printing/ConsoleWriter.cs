@@ -17,6 +17,26 @@ namespace BlackJack.Printing
             Console.WriteLine(output);
         }
 
+        public static void AskUserInput() {
+            ConsoleWriter.Writeline("-PLEASE SUBMIT YOUR INPUT-");
+        }
+
+        public static void InvalidInput() {
+            ConsoleWriter.Writeline("*=INVALID INPUT, TRY AGAIN=*");
+        }
+
+        public static void WriteActionToPlayer(string output) {
+            ConsoleWriter.Writeline($"\t{output}.");
+        }
+
+        public static void ExitGameOption() {
+            ConsoleWriter.WriteActionToPlayer("Q) - EXIT GAME");
+        }
+
+        public static void OnBlackJackExit() {
+            ConsoleWriter.Writeline("COWARD");
+        }
+
         public static void WriteCard(Card card)
         {
             Console.ForegroundColor = card.getColor;

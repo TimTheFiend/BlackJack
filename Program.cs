@@ -2,6 +2,15 @@
 using BlackJack.BicycleCards;
 
 
+
+CardSuit suit = CardSuit.Clubs;
+Console.WriteLine(suit);
+
+//suit = suit + 1;
+suit++;
+Console.WriteLine(suit);
+return;
+
 Deck deck = new Deck();
 //deck.PrintDebug();
 
