@@ -25,7 +25,7 @@ namespace BlackJack
         public TheHouse() {
             //Set local variables
             IsPlayerTurn = true;
-            phase = GamePhase.NONE;
+            phase = GamePhase.BET;
             dealer = new Dealer();
             player = new Player();
             //Instantiate deck
@@ -70,9 +70,9 @@ namespace BlackJack
             ActionHandler actionHandler;
             while (true) {
                 switch (phase) {
-                    case GamePhase.NONE:
-                        actionHandler = GamePhaseNone;
-                        break;
+                    //case GamePhase.NONE:
+                    //    actionHandler = GamePhaseNone;
+                    //    break;
                     case GamePhase.BET:
                         actionHandler = GamePhaseBet;
                         break;
@@ -91,6 +91,7 @@ namespace BlackJack
                     default:
                         throw new Exception("TheHouse.phase doesn't have a value.\n\tI don't know how, but it really shouldn't be possible.");
                 }
+                ConsoleWriter.Writeline(phase.ToString());
                 actionHandler();
             }
         }
@@ -133,6 +134,7 @@ namespace BlackJack
 
 
         #region GamePhase management
+        //PHASE_0
         private void GamePhaseNone() {
             #region Formula
             string[] msgs = new string[] {
@@ -148,10 +150,12 @@ namespace BlackJack
             BlackJackAction playerAction = HandlePlayerInput(actions, msgs);
         }
 
+        //PHASE_1
         //TODO: Unique phase, make seperate handler
         private void GamePhaseBet() {
         }
 
+        //PHASE_2
         //TODO: Doesn't require any input from player
         private void GamePhaseShuffle() {
             if (deck.isShuffleNeeded) {
@@ -160,6 +164,7 @@ namespace BlackJack
             }
         }
 
+        //PHASE_3
         //TODO: Handle blackjack + Insurance
         private void GamePhaseDeal() {
             ConsoleWriter.Writeline("====DEAL====");
@@ -184,18 +189,14 @@ namespace BlackJack
 
         }
 
+        //PHASE_4
         private void GamePhasePlay() {
-            #region Formula
             string[] msgs = new string[] {
-                "CURRENT PHASE = THE_PLAY"
+                "CURRENT PHASE = THE_PLAY",
+                player.hand.getCardsOnHand
             };
-            BlackJackAction[] actions = new BlackJackAction[] {
-                BlackJackAction.STAND,
-                BlackJackAction.HIT
-            };
-            #endregion
-            //TODO: Check if player could DOUBLE_DOWN or SPLIT_PAIRS
-
+            BlackJackAction[] actions = player.GetPlayerActions();
+            
         }
 
         /*TODO

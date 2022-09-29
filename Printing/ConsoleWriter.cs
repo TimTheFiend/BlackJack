@@ -71,6 +71,18 @@ namespace BlackJack.Printing
             ResetConsoleColor();
         }
 
+        public static void WritePlayerHand(string player, int handValue, List<Card> hand) {
+            ResetConsoleColor();
+            Console.Write($"{player}:\t");
+            Console.Write($"({handValue})\t");
+            foreach (Card card in hand) {
+                Console.ForegroundColor = card.getColor;
+                Console.Write($"[{card.getValueAndSuit}]");
+            }
+            Console.WriteLine();
+            ResetConsoleColor();
+        }
+
         public static void Writeline(CardPrintout cardPrintout)
         {
             Console.ForegroundColor = cardPrintout.Color;

@@ -2,11 +2,11 @@
 {
     public enum GamePhase
     {
-        NONE = 0,
-        BET = 1,
-        SHUFFLE = 2,
-        DEAL = 3,
-        PLAY = 4,
-        SETTLEMENT = 5
+        BET = 0,
+        SHUFFLE = 1,
+        DEAL = 2,
+        PLAY = 3,
+        SETTLEMENT = 4,
+        EXIT = 5
     }
 }

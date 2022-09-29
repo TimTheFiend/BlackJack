@@ -34,6 +34,9 @@ namespace BlackJack.Participant
             get {
                 int totalValue = 0;
                 foreach (Card card in cards.OrderByDescending(x => x.Value)) {
+                    if (!card.IsFaceUp) {
+                        continue;
+                    }
                     if (card.Value == CardValue.Ace) {
                         totalValue += totalValue > 10 ? aceMinValue : aceMaxValue;
                         continue;

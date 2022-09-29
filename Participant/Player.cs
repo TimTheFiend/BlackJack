@@ -8,9 +8,26 @@ namespace BlackJack.Participant
 {
     public class Player : BasePlayer
     {
+        public Wallet wallet;
+
+        public Player() {
+            wallet = Wallet.StartingWallet;
+        }
 
         public override string ToString() {
             return "PLAYER";
+        }
+
+        //TODO
+        public BlackJackAction[] GetPlayerActions() {
+            List<BlackJackAction> playerActions = new List<BlackJackAction>();
+            playerActions.Add(BlackJackAction.STAND);
+            playerActions.Add(BlackJackAction.HIT);
+
+            //TODO: Check for pairs
+            //TODO: Check for double down
+
+            return playerActions.ToArray();
         }
     }
 }

@@ -2,20 +2,11 @@
 
 using BlackJack;
 using BlackJack.BicycleCards;
+using BlackJack.GameLogic;
 using BlackJack.Participant;
 using BlackJack.Printing;
 
-Hand hand = new Hand();
 
-Deck deck = new Deck();
-deck.ShuffleDeck();
+GameManager gm = new GameManager();
 
-TheHouse daHouse = new TheHouse();
-
-while (daHouse.isDeckPlayable) {
-    daHouse.DealerPlayLoop();
-    daHouse.dealer.EmptyHand();
-    daHouse.player.EmptyHand();
-    Console.WriteLine("\n");
-}
-daHouse.DealerPlayLoop();
+gm.PhaseHandler();
