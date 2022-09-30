@@ -41,7 +41,10 @@ namespace BlackJack.GameLogic
                 HandlePhaseBet();
                 //UIHandler.UpdateBalance(player.getBalance);
                 HandlePhaseShuffle();
-                HandlePhaseDeal();
+                if (HandlePhaseDeal(out BasePlayer bPlayerBlackJack)) {
+                    Console.WriteLine(bPlayerBlackJack.ToString() + " has blackjack");
+                    //TODO HANDLE NATURAL BLACKJACK CASE
+                }
                 if (!HandlePhasePlay(out bool playerBusted))
                     return;
                 if (!playerBusted) {
@@ -107,7 +110,7 @@ namespace BlackJack.GameLogic
         /// <summary>
         /// Deals <see cref="Card"/>s from <see cref="GameManager.deck"/> 
         /// </summary>
-        private void HandlePhaseDeal() {
+        private bool HandlePhaseDeal(out BasePlayer basePlayerWithBlackJack) {
             ConsoleWriter.Writeline("====DEAL====");
             int startingHandSize = 2;
 
@@ -124,12 +127,26 @@ namespace BlackJack.GameLogic
                 dealer.hand.AddCard(dealerCard);
                 ConsoleWriter.WritePlayerHand(dealer.ToString(), dealer.hand.getTotalHandValue, dealer.getHand);
             }
+
+            if (player.hasBlackjack)
+                basePlayerWithBlackJack = player;
+            else 
+                basePlayerWithBlackJack = dealer;
+
+            return player.hasBlackjack || dealer.hasBlackjack;
         }
+
         #endregion
 
         #region Play Phase
         //Returns true is game continues; False is game stops.
         private bool HandlePhasePlay(out bool playerBusted) {
+            if (player.hasBlackjack) {
+                Console.WriteLine("YOU HAVE BLACK JACK");
+                playerBusted = false;
+                return true;
+            }
+            
             ConsoleWriter.Writeline("=====THE PLAY=====");
 
             string[] msgs = new string[] {
@@ -138,6 +155,7 @@ namespace BlackJack.GameLogic
 
             while (true) {
                 BlackJackAction action = HandlePlayerPlay();
+
 
                 switch (action) {
 
@@ -162,19 +180,16 @@ namespace BlackJack.GameLogic
         }
 
         private BlackJackAction HandlePlayerPlay() {
-            BlackJackAction[] actions = new BlackJackAction[] {
-                BlackJackAction.STAND,
-                BlackJackAction.HIT
-            };
+            List<BlackJackAction> actions = player.GetPlayerActions;
 
-            for (int i = 0; i < actions.Length; i++) {
+            for (int i = 0; i < actions.Count; i++) {
                 ConsoleWriter.WriteActionToPlayer($"{i + 1}) - {actions[i]}");
             }
 
             while (true) {
                 var initialInput = Console.ReadKey(true).KeyChar;
                 if (int.TryParse(initialInput.ToString(), out int userInput)) {
-                    if (userInput > 0 && userInput <= actions.Length) {
+                    if (userInput > 0 && userInput <= actions.Count) {
                         return actions[userInput - 1];
                     }
                 }

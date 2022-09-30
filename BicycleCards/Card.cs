@@ -95,6 +95,10 @@ namespace BlackJack.BicycleCards
             }
         }
 
+        //TODO Fix so it doesn't show color when IsFaceUp is false
+        //public ConsoleColor getColor => (int)Suit % 2 == 0 ? CardPrintout.CardBlack : CardPrintout.CardRed;
+
+
         public ConsoleColor getColor {
             get {
                 if (!IsFaceUp) {

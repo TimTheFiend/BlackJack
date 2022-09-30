@@ -23,15 +23,34 @@ namespace BlackJack.Participant
         public string getBalanceString => "$" + getBalance;
 
         //TODO
-        public BlackJackAction[] GetPlayerActions() {
-            List<BlackJackAction> playerActions = new List<BlackJackAction>();
-            playerActions.Add(BlackJackAction.STAND);
-            playerActions.Add(BlackJackAction.HIT);
+        //public List<BlackJackAction> GetPlayerActions() {
+        //    List<BlackJackAction> playerActions = new List<BlackJackAction>();
+        //    playerActions.Add(BlackJackAction.STAND);
+        //    playerActions.Add(BlackJackAction.HIT);
+        //    if (hand.CanSplitPairs) playerActions.Add(BlackJackAction.SPLIT_PAIRS);
+        //    if (hand.CanDoubleDown) playerActions.Add(BlackJackAction.DOUBLE_DOWN);
+            
 
-            //TODO: Check for pairs
-            //TODO: Check for double down
+        //    //TODO: Check for pairs
+        //    //TODO: Check for double down
 
-            return playerActions.ToArray();
+        //    return playerActions;
+        //}
+
+        public List<BlackJackAction> GetPlayerActions {
+            get {
+                List<BlackJackAction> playerActions = new List<BlackJackAction>();
+                playerActions.Add(BlackJackAction.STAND);
+                playerActions.Add(BlackJackAction.HIT);
+                if (hand.CanSplitPairs) playerActions.Add(BlackJackAction.SPLIT_PAIRS);
+                if (hand.CanDoubleDown) playerActions.Add(BlackJackAction.DOUBLE_DOWN);
+
+
+                //TODO: Check for pairs
+                //TODO: Check for double down
+
+                return playerActions;
+            }
         }
     }
 }

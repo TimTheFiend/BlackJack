@@ -13,13 +13,15 @@ namespace BlackJack.Printing
     //TODO Take another look at this, remove any redundant functions.
     public static class ConsoleWriter
     {
+        private static bool isDebugging = true;
+
+
         public static void Write(string output, bool indent = true) {
             ResetConsoleColor();
             Console.Write(indent ? output + "\t" : output);
         }
 
-        public static void Writeline(string output)
-        {
+        public static void Writeline(string output) {
             ResetConsoleColor();
             Console.WriteLine(output);
         }
@@ -48,18 +50,15 @@ namespace BlackJack.Printing
         }
 
 
-        public static void WriteCard(Card card)
-        {
+        public static void WriteCard(Card card) {
             Console.ForegroundColor = card.getColor;
             Console.WriteLine(card.getValueAndSuit);
 
             ResetConsoleColor();
         }
 
-        public static void WriteCard(params Card[] cards)
-        {
-            foreach (Card card in cards)
-            {
+        public static void WriteCard(params Card[] cards) {
+            foreach (Card card in cards) {
                 Console.ForegroundColor = card.getColor;
                 Console.Write($"[{card.getValueAndSuit}]");
             }
@@ -93,6 +92,9 @@ namespace BlackJack.Printing
             Console.WriteLine();
             ResetConsoleColor();
 
+            if (isDebugging) {
+                return;
+            }
             Thread.Sleep(GameManager.drawDelay);
         }
 
@@ -109,8 +111,7 @@ namespace BlackJack.Printing
             Console.Clear();
         }
 
-        private static void ResetConsoleColor()
-        {
+        private static void ResetConsoleColor() {
             Console.ForegroundColor = ConsoleColor.White;
         }
     }

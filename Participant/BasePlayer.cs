@@ -37,18 +37,11 @@ namespace BlackJack.Participant
             throw new NotImplementedException();
         }
 
+        public bool hasBlackjack => hand.hasBlackJack;
+
         //TODO
         public virtual void Hit(Card newCard) {
             hand.AddCard(newCard);
-        }
-
-        public void DebugPrintHand() {
-            hand.DebugPrint();
-        }
-
-        //TODO: Need implementation of GameLogic/Manager class
-        public void Stand() {
-            
         }
 
         public void EmptyHand() {
