@@ -1,4 +1,5 @@
-﻿using System;
+﻿using BlackJack.BicycleCards;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -6,9 +7,14 @@ using System.Threading.Tasks;
 
 namespace BlackJack.Participant
 {
-    public class Player : BasePlayer
+    public class Player : BasePlayer, ICloneable
     {
         public Wallet wallet;
+        public string FOO = "hahah";
+
+        public object Clone() {
+            return this.MemberwiseClone();
+        }
 
         public Player() {
             wallet = Wallet.StartingWallet;
@@ -18,24 +24,21 @@ namespace BlackJack.Participant
             return "PLAYER";
         }
 
+        public Player OnSplittingPairs() {
+            Player split = (Player)this.Clone();
+            Card splitPair = hand.GetSplitPair();
+
+            split.EmptyHand();
+            split.hand.AddCard(splitPair);
+
+            return split;
+        }
+
+
         public int getBalance => wallet.balance;
 
         public string getBalanceString => "$" + getBalance;
 
-        //TODO
-        //public List<BlackJackAction> GetPlayerActions() {
-        //    List<BlackJackAction> playerActions = new List<BlackJackAction>();
-        //    playerActions.Add(BlackJackAction.STAND);
-        //    playerActions.Add(BlackJackAction.HIT);
-        //    if (hand.CanSplitPairs) playerActions.Add(BlackJackAction.SPLIT_PAIRS);
-        //    if (hand.CanDoubleDown) playerActions.Add(BlackJackAction.DOUBLE_DOWN);
-            
-
-        //    //TODO: Check for pairs
-        //    //TODO: Check for double down
-
-        //    return playerActions;
-        //}
 
         public List<BlackJackAction> GetPlayerActions {
             get {
@@ -44,10 +47,6 @@ namespace BlackJack.Participant
                 playerActions.Add(BlackJackAction.HIT);
                 if (hand.CanSplitPairs) playerActions.Add(BlackJackAction.SPLIT_PAIRS);
                 if (hand.CanDoubleDown) playerActions.Add(BlackJackAction.DOUBLE_DOWN);
-
-
-                //TODO: Check for pairs
-                //TODO: Check for double down
 
                 return playerActions;
             }

@@ -172,6 +172,10 @@ namespace BlackJack.GameLogic
                             return true;
                         }
                         continue;
+                    case BlackJackAction.SPLIT_PAIRS:
+                        Player _player = player.OnSplittingPairs();
+                        Console.WriteLine();
+                        break;
                     default:
                         //END GAME
                         throw new Exception("GameManager.HandlePhasePlay() -> Went to Default");

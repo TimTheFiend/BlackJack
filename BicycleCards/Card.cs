@@ -109,5 +109,9 @@ namespace BlackJack.BicycleCards
         }
 
         #endregion
+
+        public override string ToString() {
+            return getSuitAndValue;
+        }
     }
 }

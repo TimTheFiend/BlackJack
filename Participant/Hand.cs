@@ -62,6 +62,13 @@ namespace BlackJack.Participant
 
         public bool CanDoubleDown => canPerformAction && getTotalHandValue > 8 && getTotalHandValue < 12;
 
+        public Card GetSplitPair() {
+            //ASSUME THEY CAN
+            Card splitPair = cards[1];
+            cards.Remove(splitPair);
+            return splitPair;
+        }
+
         //TODO 
         public string getCardsOnHand {
             get {
