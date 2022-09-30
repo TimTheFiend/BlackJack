@@ -12,6 +12,7 @@ namespace BlackJack.GameLogic
     public class GameManager
     {
         GamePhase currentPhase { get; set; }
+        BlackJackAction lastPlayerAction = BlackJackAction.NONE;
         Deck deck;
 
         Player player;
@@ -149,15 +150,12 @@ namespace BlackJack.GameLogic
             
             ConsoleWriter.Writeline("=====THE PLAY=====");
 
-            string[] msgs = new string[] {
-                "WHAT DO YOU WANT TO DO"
-            };
 
             while (true) {
-                BlackJackAction action = HandlePlayerPlay();
+                lastPlayerAction = HandlePlayerPlay();
 
 
-                switch (action) {
+                switch (lastPlayerAction) {
 
                     case BlackJackAction.STAND:
                         //END CURRENT PHASE
@@ -172,6 +170,11 @@ namespace BlackJack.GameLogic
                             return true;
                         }
                         continue;
+                    case BlackJackAction.DOUBLE_DOWN:
+                        player.hand.AddCard(deck.DrawCard());
+                        ConsoleWriter.WritePlayerHand(player.ToString(), player.hand.getTotalHandValue, player.getHand);
+                        playerBusted = player.isBust;
+                        return true;
                     case BlackJackAction.SPLIT_PAIRS:
                         Player _player = player.OnSplittingPairs();
                         Console.WriteLine();
@@ -227,8 +230,17 @@ namespace BlackJack.GameLogic
 
         private void HandlePhaseSettlement() {
             if (player.hand > dealer.hand || dealer.isBust) {
-                int payout = 2;
-                player.wallet.AddAmount(bettingPool * payout);
+
+                double payoutModifier = 1.5;
+
+                if (lastPlayerAction == BlackJackAction.DOUBLE_DOWN) {
+                    payoutModifier = 2.0;
+                }
+                else {
+                    payoutModifier = 1.5;
+                }
+
+                player.wallet.AddAmount((int)(bettingPool * payoutModifier) + bettingPool);
                 UIHandler.UpdateBalance(player.getBalance);
             }
         }
