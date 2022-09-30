@@ -13,7 +13,7 @@ namespace BlackJack.Printing
     //TODO Take another look at this, remove any redundant functions.
     public static class ConsoleWriter
     {
-        private static bool isDebugging = true;
+        private static bool isDebugging = false;
 
 
         public static void Write(string output, bool indent = true) {

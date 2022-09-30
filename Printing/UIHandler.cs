@@ -1,4 +1,5 @@
-﻿using System;
+﻿using BlackJack.BicycleCards;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -28,13 +29,74 @@ namespace BlackJack.Printing
         private static readonly int playerBetRowIndex = 2;
         #endregion Unique to Balance
 
-        
+        #region Unique to Deck/Cards
+        private static readonly int cardPrintLength = 4; //[??]
+        //DEALER
+        //PLAYER (0) 
+        private static readonly int startPrintCardPos = 15;
+
+        private static readonly int deckCardsReaminingIndex = 3;
+        private static readonly int dealerHandIndex = 4;
+        private static readonly int playerHandIndex = 5;
+        private static int dealerCardPos = -1;
+        private static int playerCardPos = -1;
+        #endregion
+
+
         public static void ClearUI() {
             startBalanceIndex = -1;
             balanceStringLength = -1;
 
             Console.Clear();
         }
+
+        /*
+         *  ResetConsoleColor();
+            Console.Write($"{player}:\t");
+            Console.Write($"({handValue})\t");
+            foreach (Card card in hand) {
+                Console.ForegroundColor = card.getColor;
+                Console.Write($"[{card.getValueAndSuit}]");
+            }
+            Console.WriteLine();
+            ResetConsoleColor();
+         */
+
+        public static void UpdateCard(int cardsRemaining, string dealerValue, List<Card> dealerCards, string playerValue, List<Card> playerCards) {
+            //Cards remaining in deck
+            Console.SetCursorPosition(0, deckCardsReaminingIndex);
+            Console.Write($"Deck-size: {cardsRemaining}");
+
+            //Dealer
+            Console.SetCursorPosition(0, dealerHandIndex);
+            Console.Write($"DEALER ({dealerValue}):");
+            //Cards
+            if (dealerCardPos < startPrintCardPos) {
+                dealerCardPos = startPrintCardPos;
+            }
+            Console.SetCursorPosition(0, dealerCardPos);
+            foreach (Card card in dealerCards) {
+                Console.ForegroundColor = card.getColor;
+                Console.Write($"[{card.getValueAndSuit}]");
+            }
+            dealerCardPos = Console.CursorLeft + 1;
+
+            //Player
+            Console.SetCursorPosition(0, playerHandIndex);
+            Console.Write($"PLAYER ({playerValue}):");
+            //Cards
+            if (playerCardPos < startPrintCardPos) {
+                playerCardPos = startPrintCardPos;
+            }
+            Console.SetCursorPosition(playerCardPos, playerHandIndex);
+            foreach (Card card in playerCards) {
+                Console.ForegroundColor = card.getColor;
+                Console.Write($"[{card.getValueAndSuit}]");
+            }
+            playerCardPos = Console.CursorLeft + 1;
+            return;
+        }
+
 
         #region Draw Balance Functions
         public static void UpdateBalance(int playerBalance, int playerBet = 0) {

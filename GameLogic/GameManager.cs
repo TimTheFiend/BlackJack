@@ -117,7 +117,9 @@ namespace BlackJack.GameLogic
             for (int i = 0; i < startingHandSize; i++) {
                 //Player gets card
                 player.hand.AddCard(deck.DrawCard());
-                ConsoleWriter.WritePlayerHand(player.ToString(), player.hand.getTotalHandValue, player.getHand);
+                //ConsoleWriter.WritePlayerHand(player.ToString(), player.hand.getTotalHandValue, player.getHand);
+                UIHandler.UpdateCard(deck.cards.Count, dealer.getHandValue.ToString(), dealer.getHand, player.getHandValue.ToString(), player.getHand);
+
 
                 Card dealerCard = deck.DrawCard();
 
@@ -125,7 +127,8 @@ namespace BlackJack.GameLogic
                     dealerCard = dealerCard.SetFaceDown();
                 }
                 dealer.hand.AddCard(dealerCard);
-                ConsoleWriter.WritePlayerHand(dealer.ToString(), dealer.hand.getTotalHandValue, dealer.getHand);
+                //ConsoleWriter.WritePlayerHand(dealer.ToString(), dealer.hand.getTotalHandValue, dealer.getHand);
+                UIHandler.UpdateCard(deck.cards.Count, dealer.getHandValue.ToString(), dealer.getHand, player.getHandValue.ToString(), player.getHand);
             }
 
             if (player.hasBlackjack)
@@ -218,17 +221,10 @@ namespace BlackJack.GameLogic
 
         #region Settlement Phase
 
-        //private void HandlePhaseSettlement() {
-        //    if (player.hand > dealer.hand) {
-        //        int payout = 2;
-        //        player.wallet.AddAmount(bettingPool * payout);
-        //    }
-        //}
-
         private void HandlePhaseSettlement() {
             if (player.hand > dealer.hand || dealer.isBust) {
                 int payout = 2;
-                player.wallet.AddAmount(bettingPool * payout);
+                player.wallet.AddAmount((bettingPool * payout) + bettingPool);
                 UIHandler.UpdateBalance(player.getBalance);
             }
         }
