@@ -149,9 +149,8 @@ namespace BlackJack.GameLogic
             
             ConsoleWriter.Writeline("=====THE PLAY=====");
 
-            string[] msgs = new string[] {
-                "WHAT DO YOU WANT TO DO"
-            };
+            bool hasPlayerSplit = false;
+            List<BlackJackAction> normalActions = new List<BlackJackAction>() { BlackJackAction.STAND, BlackJackAction.HIT };
 
             while (true) {
                 BlackJackAction action = HandlePlayerPlay();
@@ -174,7 +173,7 @@ namespace BlackJack.GameLogic
                         continue;
                     case BlackJackAction.SPLIT_PAIRS:
                         Player _player = player.OnSplittingPairs();
-                        Console.WriteLine();
+                        
                         break;
                     default:
                         //END GAME
@@ -183,8 +182,9 @@ namespace BlackJack.GameLogic
             }
         }
 
-        private BlackJackAction HandlePlayerPlay() {
-            List<BlackJackAction> actions = player.GetPlayerActions;
+        private BlackJackAction HandlePlayerPlay(bool hasPlayerSplit = false) {
+            List<BlackJackAction> actions = hasPlayerSplit ? player.GetRegularActions : player.GetPlayerActions;
+            //List <BlackJackAction> actions = player.GetPlayerActions;
 
             for (int i = 0; i < actions.Count; i++) {
                 ConsoleWriter.WriteActionToPlayer($"{i + 1}) - {actions[i]}");

@@ -24,6 +24,10 @@ namespace BlackJack.Participant
             return "PLAYER";
         }
 
+        /// <summary>
+        /// Creates a clone of itself, to be used when <see cref="BlackJackAction.SPLIT_PAIRS"/>.
+        /// </summary>
+        /// <returns>Clone of <c>this</c> with one of the cards from the original hand.</returns>
         public Player OnSplittingPairs() {
             Player split = (Player)this.Clone();
             Card splitPair = hand.GetSplitPair();
@@ -49,6 +53,15 @@ namespace BlackJack.Participant
                 if (hand.CanDoubleDown) playerActions.Add(BlackJackAction.DOUBLE_DOWN);
 
                 return playerActions;
+            }
+        }
+
+        public List<BlackJackAction> GetRegularActions {
+            get {
+                return new List<BlackJackAction>() {
+                    BlackJackAction.STAND,
+                    BlackJackAction.HIT
+                };
             }
         }
     }
