@@ -5,6 +5,7 @@ using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 using BlackJack.BicycleCards;
+using BlackJack.GameLogic;
 using BlackJack.Participant;
 
 namespace BlackJack.Printing
@@ -91,19 +92,10 @@ namespace BlackJack.Printing
             }
             Console.WriteLine();
             ResetConsoleColor();
+
+            Thread.Sleep(GameManager.drawDelay);
         }
 
-        public static void WritePlayerHand(BasePlayer player) {
-            ResetConsoleColor();
-            Console.Write($"{player.ToString()}:\t");
-            Console.Write($"({player.hand.getTotalHandValue})\t");
-            foreach (Card card in player.getHand) {
-                Console.ForegroundColor = card.getColor;
-                Console.Write($"[{card.getValueAndSuit}]");
-            }
-            Console.WriteLine();
-            ResetConsoleColor();
-        }
 
         public static void Clear() {
             ResetConsoleColor();

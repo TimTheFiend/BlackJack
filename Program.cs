@@ -7,8 +7,8 @@ using BlackJack.Participant;
 using BlackJack.Printing;
 using System.Diagnostics;
 
-bool debuggingGameManager = false;
-bool debuggingUIHandler = true;
+bool debuggingGameManager = true;
+bool debuggingUIHandler = false;
 
 
 if (debuggingUIHandler) {

@@ -19,6 +19,9 @@ namespace BlackJack.GameLogic
 
         private int bettingPool = 0;
 
+        private static readonly double _drawDelayInSeconds = 1.5;
+        public static int drawDelay => (int)_drawDelayInSeconds * 1000; //Milliseconds
+
         private delegate bool InputDelegate();
 
         public GameManager() {
@@ -34,9 +37,9 @@ namespace BlackJack.GameLogic
         public void PhaseHandler() {
             //Re-initialize round variables
             while (true) {
-
-                if (!HandlePhaseBet())
-                    return;
+                UIHandler.UpdateBalance(player.getBalance);
+                HandlePhaseBet();
+                //UIHandler.UpdateBalance(player.getBalance);
                 HandlePhaseShuffle();
                 HandlePhaseDeal();
                 if (!HandlePhasePlay(out bool playerBusted))
@@ -59,17 +62,11 @@ namespace BlackJack.GameLogic
 
 
         #region Bet Phase
-        private bool HandlePhaseBet() {
-            string[] msgs = new string[] {
-                $"PLAYER BALANCE:\t{player.getBalanceString}"
-            };
-
-
-            ConsoleWriter.Writeline($"(Balance: {player.wallet.balance})\nNOTE: If your bet exceeds current balance, it'll be considered as an all-in.");
-            return HandlePlayerBet();
+        private void HandlePhaseBet() {
+            HandlePlayerBet();
         }
 
-        private bool HandlePlayerBet() {
+        private void HandlePlayerBet() {
             while (true) {
                 ConsoleWriter.Writeline("How much do you want to bet?");
 
@@ -88,8 +85,9 @@ namespace BlackJack.GameLogic
                         continue;
                     }
                     bettingPool = player.wallet.AttemptBet(betAmount);
-                    ConsoleWriter.Writeline($"=====BET ACCEPTED=====\nCurrent balance:\t${player.wallet.balance}\nCurrent bet:\t\t${bettingPool}");
-                    return true;
+                    UIHandler.UpdateBalance(player.getBalance, bettingPool);
+                    //ConsoleWriter.Writeline($"=====BET ACCEPTED=====\nCurrent balance:\t${player.wallet.balance}\nCurrent bet:\t\t${bettingPool}");
+                    return;
                 }
             }
         }
@@ -190,7 +188,8 @@ namespace BlackJack.GameLogic
             ConsoleWriter.WriteCard(dealer.getHand);
             while (dealer.canHit) {
                 dealer.Hit(deck.DrawCard());
-                ConsoleWriter.WritePlayerHand(dealer);
+                ConsoleWriter.WritePlayerHand(dealer.ToString(), dealer.hand.getTotalHandValue, dealer.getHand);
+
             }
             return dealer.isBust;
         }
@@ -211,6 +210,7 @@ namespace BlackJack.GameLogic
             if (player.hand > dealer.hand || dealer.isBust) {
                 int payout = 2;
                 player.wallet.AddAmount(bettingPool * payout);
+                UIHandler.UpdateBalance(player.getBalance);
             }
         }
 
@@ -227,9 +227,11 @@ namespace BlackJack.GameLogic
             //Reset bettingPool
             bettingPool = 0;
 
+            //UIHandler.UpdateBalance(player.getBalance);
+            Console.WriteLine("Press any key to continue...");
+            Console.ReadKey(true);
 
-            ConsoleWriter.OnNewRound();
-
+            UIHandler.ClearUI();
             ////Clear Console
             //ConsoleWriter.Clear();
         }

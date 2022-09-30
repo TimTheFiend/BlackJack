@@ -8,8 +8,8 @@ namespace BlackJack.Printing
 {
     public static class UIHandler
     {
-        private static ConsoleColor colorPlayerName = ConsoleColor.White;
-        private static ConsoleColor colorBalance = ConsoleColor.Green;
+        private static ConsoleColor colorDefault = ConsoleColor.White;
+        private static ConsoleColor colorMoney = ConsoleColor.Green;
         private static ConsoleColor colorWall = ConsoleColor.Yellow;
 
         #region Unique to Balance
@@ -28,6 +28,15 @@ namespace BlackJack.Printing
         private static readonly int playerBetRowIndex = 2;
         #endregion Unique to Balance
 
+        
+        public static void ClearUI() {
+            startBalanceIndex = -1;
+            balanceStringLength = -1;
+
+            Console.Clear();
+        }
+
+        #region Draw Balance Functions
         public static void UpdateBalance(int playerBalance, int playerBet = 0) {
             int totalLength = balanceTextWidth + playerBalance.ToString().Length;
 
@@ -37,19 +46,22 @@ namespace BlackJack.Printing
                 startBalanceIndex = DrawBalanceArea();
             }
 
+            DrawBalanceAndBet(playerBalance, playerBet);
 
-            //Console.SetCursorPosition(2, playerBalanceRowIndex);
-            //Console.Write($"{balanceText}");
-            //startBalanceIndex = Console.CursorLeft;
+        }
+
+        private static void DrawBalanceAndBet(int playerBalance, int playerBet) {
+            Console.ForegroundColor = colorMoney;
+            //Prints the player's $ Balance.
             Console.SetCursorPosition(startBalanceIndex, playerBalanceRowIndex);
             Console.Write(playerBalance);
-            
-            //Sets the Bet value to be 0
+
+            //Prints the player's $ bet; defaults to 0
             Console.SetCursorPosition(Console.CursorLeft - playerBet.ToString().Length, playerBetRowIndex);
             Console.Write(playerBet);
             Console.SetCursorPosition(0, 5);
-            
 
+            Console.ForegroundColor = colorDefault;
         }
 
         //RETURNS CURSOR POSITION FOR BALANCE AMOUNT
@@ -77,16 +89,18 @@ namespace BlackJack.Printing
             }
             Console.SetCursorPosition(2, playerBalanceRowIndex);
             Console.Write(balanceText);
-            
+
             //Bet print
             int cursorSuffixIndex = Console.CursorLeft - 2;
             Console.SetCursorPosition(2, playerBetRowIndex);
             Console.Write(betText);
             Console.SetCursorPosition(cursorSuffixIndex, playerBetRowIndex);
             Console.Write(" $");
-            
+
 
             return Console.CursorLeft;
         }
+
+        #endregion Draw Balance Functions
     }
 }

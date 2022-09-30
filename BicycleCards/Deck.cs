@@ -55,7 +55,7 @@ namespace BlackJack.BicycleCards
             //ShuffleDeck();
         }
 
-        // TODO: Redo
+        //Draws card 
         public Card DrawCard()
         {
             const int pos = 0;
