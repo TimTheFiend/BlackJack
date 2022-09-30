@@ -5,8 +5,24 @@ using BlackJack.BicycleCards;
 using BlackJack.GameLogic;
 using BlackJack.Participant;
 using BlackJack.Printing;
+using System.Diagnostics;
+
+bool debuggingGameManager = false;
+bool debuggingUIHandler = true;
 
 
-GameManager gm = new GameManager();
+if (debuggingUIHandler) {
+    UIHandler.UpdateBalance(20000000, 6500);
+    
+}
 
-gm.PhaseHandler();
+Console.WriteLine();
+Console.WriteLine();
+Console.WriteLine();
+Console.WriteLine();
+Console.WriteLine();
+if (debuggingGameManager) {
+    GameManager gm = new GameManager();
+
+    gm.PhaseHandler();
+}
