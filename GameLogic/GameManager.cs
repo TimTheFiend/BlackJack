@@ -117,7 +117,8 @@ namespace BlackJack.GameLogic
             for (int i = 0; i < startingHandSize; i++) {
                 //Player gets card
                 player.hand.AddCard(deck.DrawCard());
-                ConsoleWriter.WritePlayerHand(player.ToString(), player.hand.getTotalHandValue, player.getHand);
+                //ConsoleWriter.WritePlayerHand(player.ToString(), player.hand.getTotalHandValue, player.getHand);
+                UIHandler.DrawPlayerHand(player.hand.getCardsOnHand);
 
                 Card dealerCard = deck.DrawCard();
 
@@ -165,7 +166,8 @@ namespace BlackJack.GameLogic
                         return true;
                     case BlackJackAction.HIT:
                         player.hand.AddCard(deck.DrawCard());
-                        ConsoleWriter.WritePlayerHand(player.ToString(), player.hand.getTotalHandValue, player.getHand);
+                        //ConsoleWriter.WritePlayerHand(player.ToString(), player.hand.getTotalHandValue, player.getHand);
+                        UIHandler.DrawPlayerHand(player.hand.getCardsOnHand);
                         if (player.isBust) {
                             ConsoleWriter.Writeline("You're a buster");
                             playerBusted = true;
@@ -217,13 +219,6 @@ namespace BlackJack.GameLogic
         #endregion
 
         #region Settlement Phase
-
-        //private void HandlePhaseSettlement() {
-        //    if (player.hand > dealer.hand) {
-        //        int payout = 2;
-        //        player.wallet.AddAmount(bettingPool * payout);
-        //    }
-        //}
 
         private void HandlePhaseSettlement() {
             if (player.hand > dealer.hand || dealer.isBust) {

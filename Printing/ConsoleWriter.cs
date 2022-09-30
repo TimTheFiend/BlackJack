@@ -81,6 +81,7 @@ namespace BlackJack.Printing
             ResetConsoleColor();
         }
 
+        //TODO Move to UIHandler.
         public static void WritePlayerHand(string player, int handValue, List<Card> hand) {
             ResetConsoleColor();
             Console.Write($"{player}:\t");

@@ -36,6 +36,21 @@ namespace BlackJack.Printing
             Console.Clear();
         }
 
+        
+        public static void DrawPlayerHand(string output) {
+            
+            int left = 30;
+            int top = 0;
+            
+            int _left = Console.CursorLeft;
+            int _top = Console.CursorTop;
+
+            Console.SetCursorPosition(left, top);
+            Console.Write("PLAYER: " + output);
+            Console.GetCursorPosition();
+            Console.SetCursorPosition(_left, _top);
+        }
+
         #region Draw Balance Functions
         public static void UpdateBalance(int playerBalance, int playerBet = 0) {
             int totalLength = balanceTextWidth + playerBalance.ToString().Length;

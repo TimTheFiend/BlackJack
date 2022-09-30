@@ -72,7 +72,7 @@ namespace BlackJack.Participant
         //TODO 
         public string getCardsOnHand {
             get {
-                string value = "";
+                string value = $"({getTotalHandValue}) - ";
                 foreach (Card card in cards) {
                     value += String.Format("[{0}]", card.getSuitAndValue);
                 }
