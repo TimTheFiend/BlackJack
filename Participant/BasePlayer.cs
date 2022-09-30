@@ -23,6 +23,7 @@ namespace BlackJack.Participant
         //Redundant
         public List<Card> getHand => hand.getHand;
 
+        
 
         /// <summary>
         /// Re-initialises <see cref="hand"/> and <see cref="cards"/>.
@@ -54,8 +55,8 @@ namespace BlackJack.Participant
             hand = new Hand();
         }
 
-
         public override string ToString() {
+
             return "UNNAMED BASEPLAYER";
         }
     }

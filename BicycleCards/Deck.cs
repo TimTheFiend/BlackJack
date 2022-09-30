@@ -11,7 +11,7 @@ namespace BlackJack.BicycleCards
     {
         public List<Card> cards { get; private set; }
         private int cardsLeft => cards.Count;
-        public bool isShuffleNeeded => cardsLeft < 20;  //Value is arbitrary. The most amount of cards a player can get is 11 without going over 21.
+        public bool isReshuffleNeeded => cardsLeft < 20;  //Value is arbitrary. The most amount of cards a player can get is 11 without going over 21.
 
         public Deck()
         {
@@ -21,7 +21,7 @@ namespace BlackJack.BicycleCards
         /// <summary>
         /// Initialises <see cref="cards"/>, and adds a standard deck of <see cref="Card"/>-object with a <see cref="CardValue"/> and <see cref="CardSuit"/>.
         /// </summary>
-        public void GenerateDeck()
+        private void GenerateDeck()
         {
             cards = new List<Card>();
 
@@ -52,7 +52,7 @@ namespace BlackJack.BicycleCards
 
         public void ReshuffleDeck() {
             GenerateDeck();
-            ShuffleDeck();
+            //ShuffleDeck();
         }
 
         // TODO: Redo
@@ -65,18 +65,6 @@ namespace BlackJack.BicycleCards
             return drawnCard;
         }
 
-        // DEBUG
-        public void PrintDebug()
-        {
-            Console.WriteLine("Generating Deck");
-            GenerateDeck();
-            Console.WriteLine("Number of cards:\t" + cards.Count);
 
-            List<CardPrintout> printouts = new List<CardPrintout>();
-            foreach (Card card in cards)
-            {
-                ConsoleWriter.WriteCard(card);
-            }
-        }
     }
 }

@@ -18,6 +18,10 @@ namespace BlackJack.Participant
             return "PLAYER";
         }
 
+        public int getBalance => wallet.balance;
+
+        public string getBalanceString => "$" + getBalance;
+
         //TODO
         public BlackJackAction[] GetPlayerActions() {
             List<BlackJackAction> playerActions = new List<BlackJackAction>();

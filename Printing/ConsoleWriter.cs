@@ -5,12 +5,18 @@ using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 using BlackJack.BicycleCards;
+using BlackJack.Participant;
 
 namespace BlackJack.Printing
 {
     //TODO Take another look at this, remove any redundant functions.
     public static class ConsoleWriter
     {
+        public static void Write(string output, bool indent = true) {
+            ResetConsoleColor();
+            Console.Write(indent ? output + "\t" : output);
+        }
+
         public static void Writeline(string output)
         {
             ResetConsoleColor();
@@ -36,6 +42,10 @@ namespace BlackJack.Printing
         public static void OnBlackJackExit() {
             ConsoleWriter.Writeline("You're leaving? You came to my black jack table, and you're leaving?");
         }
+        public static void OnReshuffle() {
+            ConsoleWriter.Writeline("Re-shuffling deck");
+        }
+
 
         public static void WriteCard(Card card)
         {
@@ -43,10 +53,6 @@ namespace BlackJack.Printing
             Console.WriteLine(card.getValueAndSuit);
 
             ResetConsoleColor();
-        }
-
-        public static void OnShuffle() {
-            ConsoleWriter.Writeline("Shuffling deck");
         }
 
         public static void WriteCard(params Card[] cards)
@@ -58,6 +64,10 @@ namespace BlackJack.Printing
             }
             Console.WriteLine();
             ResetConsoleColor();
+        }
+
+        public static void WriteCard(List<Card> cards) {
+            ConsoleWriter.WriteCard(cards.ToArray());
         }
 
         public static void WriteCard(string player, params Card[] cards) {
@@ -83,25 +93,28 @@ namespace BlackJack.Printing
             ResetConsoleColor();
         }
 
-        public static void Writeline(CardPrintout cardPrintout)
-        {
-            Console.ForegroundColor = cardPrintout.Color;
-            Console.WriteLine(cardPrintout.TextOutput);
-
+        public static void WritePlayerHand(BasePlayer player) {
             ResetConsoleColor();
-        }
-
-
-        // Note: Does not add spaces between prints.
-        public static void Writeline(params CardPrintout[] cardPrintouts)
-        {
-            foreach (CardPrintout item in cardPrintouts)
-            {
-                Console.ForegroundColor = item.Color;
-                Console.Write(item.TextOutput);
+            Console.Write($"{player.ToString()}:\t");
+            Console.Write($"({player.hand.getTotalHandValue})\t");
+            foreach (Card card in player.getHand) {
+                Console.ForegroundColor = card.getColor;
+                Console.Write($"[{card.getValueAndSuit}]");
             }
             Console.WriteLine();
             ResetConsoleColor();
+        }
+
+        public static void Clear() {
+            ResetConsoleColor();
+            Console.Clear();
+        }
+
+        public static void OnNewRound() {
+            ResetConsoleColor();
+            Console.WriteLine("Press enter to continue...");
+            Console.ReadLine();
+            Console.Clear();
         }
 
         private static void ResetConsoleColor()

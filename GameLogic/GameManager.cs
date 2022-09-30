@@ -32,17 +32,102 @@ namespace BlackJack.GameLogic
         }
 
         public void PhaseHandler() {
-            if (!HandlePhaseBet()) 
-                return;
-            HandlePhaseShuffle();
-            HandlePhaseDeal();
-            if (!HandlePhasePlay(out bool playerBusted))
-                return;
-            if (!playerBusted) 
-                DealerPlayLoop();
+            //Re-initialize round variables
+            while (true) {
 
+                if (!HandlePhaseBet())
+                    return;
+                HandlePhaseShuffle();
+                HandlePhaseDeal();
+                if (!HandlePhasePlay(out bool playerBusted))
+                    return;
+                if (!playerBusted) {
+                    DealerPlayLoop();
+                    HandlePhaseSettlement();
+
+                }
+
+                if (player.wallet.IsBroke)
+                    OnPlayerBroke();
+
+                PrepareNewRound();
+            }
         }
 
+
+
+
+
+        #region Bet Phase
+        private bool HandlePhaseBet() {
+            string[] msgs = new string[] {
+                $"PLAYER BALANCE:\t{player.getBalanceString}"
+            };
+
+
+            ConsoleWriter.Writeline($"(Balance: {player.wallet.balance})\nNOTE: If your bet exceeds current balance, it'll be considered as an all-in.");
+            return HandlePlayerBet();
+        }
+
+        private bool HandlePlayerBet() {
+            while (true) {
+                ConsoleWriter.Writeline("How much do you want to bet?");
+
+                string userInput = "";
+
+                while (String.IsNullOrEmpty(userInput)) {
+                    userInput = Console.ReadLine();
+                }
+
+
+                if (String.IsNullOrEmpty(userInput)) {
+                    continue;
+                }
+                if (int.TryParse(userInput, out int betAmount)) {
+                    if (betAmount <= 0) {
+                        continue;
+                    }
+                    bettingPool = player.wallet.AttemptBet(betAmount);
+                    ConsoleWriter.Writeline($"=====BET ACCEPTED=====\nCurrent balance:\t${player.wallet.balance}\nCurrent bet:\t\t${bettingPool}");
+                    return true;
+                }
+            }
+        }
+        #endregion
+
+        #region Shuffle Phase
+        private void HandlePhaseShuffle() {
+            if (deck.isReshuffleNeeded) {
+                ConsoleWriter.OnReshuffle();
+                deck.ReshuffleDeck();
+            }
+            deck.ShuffleDeck();
+        }
+        #endregion
+
+        #region Deal Phase
+        /// <summary>
+        /// Deals <see cref="Card"/>s from <see cref="GameManager.deck"/> 
+        /// </summary>
+        private void HandlePhaseDeal() {
+            ConsoleWriter.Writeline("====DEAL====");
+            int startingHandSize = 2;
+
+            for (int i = 0; i < startingHandSize; i++) {
+                //Player gets card
+                player.hand.AddCard(deck.DrawCard());
+                ConsoleWriter.WritePlayerHand(player.ToString(), player.hand.getTotalHandValue, player.getHand);
+
+                Card dealerCard = deck.DrawCard();
+
+                if (dealer.hand.handSize == 0) {
+                    dealerCard = dealerCard.SetFaceDown();
+                }
+                dealer.hand.AddCard(dealerCard);
+                ConsoleWriter.WritePlayerHand(dealer.ToString(), dealer.hand.getTotalHandValue, dealer.getHand);
+            }
+        }
+        #endregion
 
         #region Play Phase
         //Returns true is game continues; False is game stops.
@@ -98,86 +183,67 @@ namespace BlackJack.GameLogic
             }
         }
 
-        public void DealerPlayLoop() {
+        public bool DealerPlayLoop() {
             //Dealer reveals the facedown card
-            //TODO: CURRENTLY CRASHES BECAUSE THE LOOP SKIPS TO PLAY
             dealer.hand.TurnCardFaceUp();
-            ConsoleWriter.WriteCard(dealer.getHand.ToArray());
+            ConsoleWriter.Write("DEALER REVEAL:");
+            ConsoleWriter.WriteCard(dealer.getHand);
             while (dealer.canHit) {
                 dealer.Hit(deck.DrawCard());
-                ConsoleWriter.WriteCard(dealer.getHand.ToArray());
+                ConsoleWriter.WritePlayerHand(dealer);
             }
-            if (dealer.isBust) {
-                ConsoleWriter.Writeline("WHOOPS");
-                ConsoleWriter.Writeline($"DEALER: {dealer.getHandValue}");
-            }
-            else {
-                dealer.Stand();
-                ConsoleWriter.Writeline("DEALER STANDS");
-                ConsoleWriter.Writeline($"DEALER: {dealer.getHandValue}");
-            }
+            return dealer.isBust;
         }
 
 
         #endregion
 
+        #region Settlement Phase
+
+        //private void HandlePhaseSettlement() {
+        //    if (player.hand > dealer.hand) {
+        //        int payout = 2;
+        //        player.wallet.AddAmount(bettingPool * payout);
+        //    }
+        //}
+
+        private void HandlePhaseSettlement() {
+            if (player.hand > dealer.hand || dealer.isBust) {
+                int payout = 2;
+                player.wallet.AddAmount(bettingPool * payout);
+            }
+        }
 
 
-        #region Bet Phase
-        private bool HandlePhaseBet() {
-            //Reset
+
+        #endregion
+
+        #region Reset Phase
+
+        private void PrepareNewRound() {
+            //Empty player hands
+            player.EmptyHand();
+            dealer.EmptyHand();
+            //Reset bettingPool
             bettingPool = 0;
 
-            ConsoleWriter.Writeline($"(Balance: {player.wallet.balance})\nNOTE: If your bet exceeds current balance, it'll be considered as an all-in.");
-            return HandlePlayerBet();
+
+            ConsoleWriter.OnNewRound();
+
+            ////Clear Console
+            //ConsoleWriter.Clear();
         }
 
-        private bool HandlePlayerBet() {
-            while (true) {
-                ConsoleWriter.Writeline("How much do you want to bet?");
-
-                string userInput = Console.ReadLine();
-
-                if (String.IsNullOrEmpty(userInput)) {
-                    continue;
-                }
-                if (int.TryParse(userInput, out int betAmount)) {
-                    bettingPool = player.wallet.AttemptBet(betAmount);
-                    ConsoleWriter.Writeline($"=====BET ACCEPTED=====\nCurrent balance:\t${player.wallet.balance}\nCurrent bet:\t\t${bettingPool}");
-                    return true;
-                }
-            }
-        }
         #endregion
 
-        #region Shuffle Phase
-        private void HandlePhaseShuffle() {
-            if (deck.isShuffleNeeded) {
-                ConsoleWriter.OnShuffle();
-                deck.ReshuffleDeck();
-            }
+        #region Player's dipped in tar and feathers and thrown out of the Casino Phase
+
+        private void OnPlayerBroke() {
+            ConsoleWriter.OnBlackJackExit();
+            Environment.Exit(0);
         }
+
         #endregion
 
-        #region Deal Phase
-        private void HandlePhaseDeal() {
-            ConsoleWriter.Writeline("====DEAL====");
-            int startingHandSize = 2;
-
-            for (int i = 0; i < startingHandSize; i++) {
-                //Player gets card
-                player.hand.AddCard(deck.DrawCard());
-                ConsoleWriter.WritePlayerHand(player.ToString(), player.hand.getTotalHandValue, player.getHand);
-
-                Card dealerCard = deck.DrawCard();
-
-                if (dealer.hand.handSize == 0) {
-                    dealerCard = dealerCard.SetFaceDown();
-                }
-                dealer.hand.AddCard(dealerCard);
-                ConsoleWriter.WritePlayerHand(dealer.ToString(), dealer.hand.getTotalHandValue, dealer.getHand);
-            }
-        }
-        #endregion
     }
 }

@@ -70,6 +70,25 @@ namespace BlackJack.Participant
             cards.Add(newCard);
         }
 
+        public static bool operator >(Hand hand, Hand other) {
+            return hand.getTotalHandValue > other.getTotalHandValue;
+        }
+
+        public static bool operator <(Hand hand, Hand other) {
+            return hand.getTotalHandValue > other.getTotalHandValue;
+        }
+
+
+        public static bool operator ==(Hand hand, Hand other) {
+            return hand.getTotalHandValue == other.getTotalHandValue;
+        }
+
+        public static bool operator !=(Hand hand, Hand other) {
+            return hand.getTotalHandValue != other.getTotalHandValue;
+        }
+
+
+
         public void DebugPrint() {
             ConsoleWriter.WriteCard(cards.ToArray());
         }
