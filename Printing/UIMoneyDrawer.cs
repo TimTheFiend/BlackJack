@@ -8,27 +8,23 @@ namespace BlackJack.Printing
 {
     public static class UIMoneyDrawer
     {
-        private static ConsoleColor colorDefault = ConsoleColor.White;
-        private static ConsoleColor colorMoney = ConsoleColor.Green;
-        private static ConsoleColor colorWall = ConsoleColor.Yellow;
-
-        #region Unique to Balance
         private static char wallChar = '#';
-        private static int startBalanceIndex = -1;
-        private static int balanceStringLength = -1;
         private static readonly string playerBalance = "Player balance: $";
         private static readonly string playerBet = "Current Bet:";
-        private static int balanceTextWidth => playerBalance.Length + 4;
 
+        /* Console.CursorTop position for floor and ceiling. */
         private static int[] wallRowIndex = new int[] {
             0,
             3
         };
+        /* Console.CursorTop position for Balance and Bet. */
         private static readonly int playerBalanceRowIndex = 1;
         private static readonly int playerBetRowIndex = 2;
-        #endregion Unique to Balance
 
         
+        /// <summary>
+        /// Clears the upper 4 lines in the console.
+        /// </summary>
         public static void OnClear() {
             UIPrinter.ResetLines(wallRowIndex[0], wallRowIndex[1]);
         }
@@ -37,10 +33,18 @@ namespace BlackJack.Printing
 
         #region Draw Balance Functions
 
+        /// <summary>
+        /// Draws the player's balance and bet within a square comprised of "#".
+        /// </summary>
+        /// <param name="balanceAmount"><see cref="Participant.Player"/>'s total balance.</param>
+        /// <param name="betAmount"><see cref="Participant.Player"/>'s current bet, defaults to 0.</param>
         public static void DrawPlayerBalance(int balanceAmount, int betAmount = 0) {
+            /* Clean the area to there's no text overlapping, and set color for consistency. */
             OnClear();
             UIPrinter.Color = UIPrinter.White;
-            string _playerBalanceText = $"# {playerBalance}{balanceAmount.ToString()} #";
+
+            /* Figure out how far to draw the "roof" and "floor" of the square. */
+            string _playerBalanceText = $"# {playerBalance}{balanceAmount} #";
 
             for (int i = 0; i < _playerBalanceText.Length; i++) {
                 foreach (int row in wallRowIndex) {
@@ -48,9 +52,8 @@ namespace BlackJack.Printing
                 }
             }
 
-
+            /* Find the Console.CursorLeft position for the dollarsign, so bet is consistent. */
             int dollarSignIndex = $"# {playerBalance}".Length - 1;
-
 
             /* Print Balance information */
             UIPrinter.SetCursor(playerBalanceRowIndex, 0, _playerBalanceText);

@@ -11,11 +11,16 @@ namespace BlackJack.BicycleCards
     {
         public List<Card> cards { get; private set; }
         private int cardsLeft => cards.Count;
-        public bool isReshuffleNeeded => cardsLeft < 20;  //Value is arbitrary. The most amount of cards a player can get is 11 without going over 21.
+        public bool isReshuffleNeeded => cardsLeft < 312 / 2;  //Value is arbitrary.
+
+        /// <summary>
+        /// <em>"The six-deck game (312 cards) is the most popular" [..]</em><br></br>Makes it feel more fair.
+        /// </summary>
+        private readonly int amountOfDecks = 6;
 
         public Deck()
         {
-            GenerateDeck(6);  //"The six-deck game (312 cards) is the most popular"
+            GenerateDeck(amountOfDecks);
         }
 
         /// <summary>
@@ -50,12 +55,18 @@ namespace BlackJack.BicycleCards
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public void ReshuffleDeck() {
             GenerateDeck();
             //ShuffleDeck();
         }
 
-        //Draws card 
+        /// <summary>
+        /// Draws a <see cref="Card"/> from itself and removes it, updates the <see cref="Console"/>.
+        /// </summary>
+        /// <returns>The <em>top</em> card.</returns>
         public Card DrawCard()
         {
             const int pos = 0;

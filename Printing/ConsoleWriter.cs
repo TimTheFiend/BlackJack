@@ -10,7 +10,9 @@ using BlackJack.Participant;
 
 namespace BlackJack.Printing
 {
-    //TODO Take another look at this, remove any redundant functions.
+    /// <summary>
+    /// Has been mostly phased out by classes within ".\Printing".
+    /// </summary>
     public static class ConsoleWriter
     {
         private static bool isDebugging = true;

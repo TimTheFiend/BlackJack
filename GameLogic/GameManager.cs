@@ -147,7 +147,7 @@ namespace BlackJack.GameLogic
 
             for (int i = 0; i < startingHandSize; i++) {
                 //Player gets card
-                player.hand.AddCard(deck.DrawCard());
+                player.Hit(deck.DrawCard());
                 UICardDrawer.DrawHand(player);
 
                 Card dealerCard = deck.DrawCard();
@@ -155,7 +155,7 @@ namespace BlackJack.GameLogic
                 if (dealer.hand.handSize == 0) {
                     dealerCard = dealerCard.SetFaceDown();
                 }
-                dealer.hand.AddCard(dealerCard);
+                dealer.Hit(dealerCard);
                 UICardDrawer.DrawHand(dealer);
             }
 
@@ -193,7 +193,7 @@ namespace BlackJack.GameLogic
                         playerBusted = false;
                         return true;
                     case BlackJackAction.HIT:
-                        player.hand.AddCard(deck.DrawCard());
+                        player.Hit(deck.DrawCard());
                         //ConsoleWriter.WritePlayerHand(player.ToString(), player.hand.getTotalHandValue, player.getHand);
                         //UIMoneyDrawer.DrawPlayerHand(player.hand.getCardsOnHand);
                         UICardDrawer.DrawHand(player);
@@ -211,7 +211,7 @@ namespace BlackJack.GameLogic
                             bettingPool += bettingPool;
                             UIMoneyDrawer.DrawPlayerBalance(player.getBalance, bettingPool);
                             /* Draw Card*/
-                            player.hand.AddCard(deck.DrawCard());
+                            player.Hit(deck.DrawCard());
                             UICardDrawer.DrawHand(player);
 
                             playerBusted = player.isBust;
