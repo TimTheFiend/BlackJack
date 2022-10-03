@@ -13,12 +13,20 @@ namespace BlackJack.BicycleCards
         public CardValue Value { get; private set; }
         public bool IsFaceUp { get; private set; } = true;
 
+        /* Magic Numbers */
         private readonly string _faceDownReturnString = "¿?";
+        private readonly int _aceFullValue = 11;
+
+        /* Card Colors */
         private const ConsoleColor _colorBlack = ConsoleColor.DarkBlue;
         private const ConsoleColor _colorRed = ConsoleColor.DarkRed;
         private const ConsoleColor _colorFaceDown = ConsoleColor.DarkYellow;
-        private const int _aceFullValue = 11;
 
+        /// <summary>
+        /// Sets the card's values, cannot be changed.
+        /// </summary>
+        /// <param name="suit">The Card's <see cref="CardSuit"/>.</param>
+        /// <param name="value">The Card's <see cref="CardValue"/></param>
         public Card(CardSuit suit, CardValue value)
         {
             Suit = suit;
@@ -27,7 +35,7 @@ namespace BlackJack.BicycleCards
 
 
         /// <summary>
-        /// Returns the value of the card, based on the rules of Black Jack.
+        /// Returns the card's value as it's calculated in Black Jack. Aces default to full value.
         /// </summary>
         public int getValue
         {
@@ -46,11 +54,21 @@ namespace BlackJack.BicycleCards
             }
         }
 
+        /// <summary>
+        /// <em>Flips</em> the <see cref="Card"/> facedown, making it <em>hidden</em> to the player.<br></br>
+        /// Only applies to the first card <see cref="Participant.Dealer"/> gets.
+        /// </summary>
+        /// <returns><c>this</c> with <see cref="IsFaceUp"/> set to <c>false</c>.</returns>
         public Card SetFaceDown() {
             IsFaceUp = false;
             return this;
         }
 
+        /// <summary>
+        /// <em>Flips</em> the <see cref="Card"/> faceup, making it <em>visible</em> to the player.<br></br>
+        /// Only applies to the first card <see cref="Participant.Dealer"/> gets.
+        /// </summary>
+        /// <returns><c>this</c> with <see cref="IsFaceUp"/> set to <c>true</c>.</returns>
         public Card SetFaceUp() {
             IsFaceUp = true;
             return this;
@@ -61,7 +79,10 @@ namespace BlackJack.BicycleCards
 
         public string getValueAndSuit => IsFaceUp ? $"{GetValueChar}{GetSuitUnicode}" : _faceDownReturnString;
 
-
+        
+        /// <summary>
+        /// Gets the unicode character representing the card's <see cref="Suit"/>,
+        /// </summary>
         private string GetSuitUnicode
         {
             get
@@ -77,11 +98,16 @@ namespace BlackJack.BicycleCards
                     case CardSuit.Clubs:
                         return "♣";
                     default:
-                        throw new Exception("Card-object does not have a suit");
+                        throw new Exception("Card-object does not have a suit, also this will literally never happen.");
                 }
             }
         }
 
+
+        /// <summary>
+        /// Returns the <see cref="Value"/> as a single character, I.E. "Ace" -> "A"; "Jack" -> "J", etc..<br></br>
+        /// Used in conjunction with <see cref="GetSuitUnicode"/> for fancy printing.
+        /// </summary>
         private string GetValueChar
         {
             get
@@ -95,10 +121,10 @@ namespace BlackJack.BicycleCards
             }
         }
 
-        //TODO Fix so it doesn't show color when IsFaceUp is false
-        //public ConsoleColor getColor => (int)Suit % 2 == 0 ? CardPrintout.CardBlack : CardPrintout.CardRed;
 
-
+        /// <summary>
+        /// Returns the appropriate <see cref="ConsoleColor"/> based on the <see cref="CardSuit"/>, and if the card isn't <see cref="IsFaceUp"/>.
+        /// </summary>
         public ConsoleColor getColor {
             get {
                 if (!IsFaceUp) {
@@ -110,6 +136,11 @@ namespace BlackJack.BicycleCards
 
         #endregion
 
+        //TODO what do you even write about ToString()???
+        /// <summary>
+        /// For fancy printing.
+        /// </summary>
+        /// <returns>It's fancy string</returns>
         public override string ToString() {
             return getSuitAndValue;
         }

@@ -1,11 +1,6 @@
 ﻿using BlackJack.BicycleCards;
 using BlackJack.Participant;
 using BlackJack.Printing;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace BlackJack.GameLogic
 {
@@ -42,7 +37,19 @@ namespace BlackJack.GameLogic
                 HandlePhaseShuffle();
                 if (HandlePhaseDeal(out BasePlayer bPlayerBlackJack)) {
                     UIPrinter.ResetDrawableArea();
-                    Console.WriteLine(bPlayerBlackJack.ToString() + " has blackjack");
+                    if (bPlayerBlackJack == dealer) {
+                        if (HandleInsurance()) {
+                            UIMoneyDrawer.DrawPlayerBalance(player.getBalance, bettingPool);
+                            UIPrinter.ResetDrawableArea();
+                            HandlePhaseSettlement();
+                            continue;
+                        }
+                        UIMoneyDrawer.DrawPlayerBalance(player.getBalance, bettingPool);
+                        UIPrinter.ResetDrawableArea();
+                    }
+                    else if (bPlayerBlackJack == player) {
+                        Console.WriteLine("PLAYER HAS BLACKJACK");
+                    }
                 }
                 if (!HandlePhasePlay(out bool playerBusted))
                     return;
@@ -59,6 +66,29 @@ namespace BlackJack.GameLogic
         }
 
 
+        private bool HandleInsurance() {
+            int maxInsuranceBet = (int)bettingPool / 2;
+            UIPrinter.ResetDrawableArea();
+            Console.Write($"Would you like to buy insurance? Max bet: {maxInsuranceBet}\nAnswer with Y/N");
+
+            while (true) {
+                var input = Console.ReadKey(true);
+                string inputAsString = input.KeyChar.ToString().ToLower();
+                if (inputAsString == "y") {
+                    //TODO
+                    player.wallet.AttemptBet(maxInsuranceBet);
+                    if (dealer.hasBlackjack) {
+                        player.wallet.AddAmount(maxInsuranceBet * 3);
+                        Console.WriteLine("DEALER HAS BLACJACK");
+                        return true;
+                    }
+                    return false;
+                }
+                else if (inputAsString == "n") {
+                    return false;
+                }
+            }
+        }
 
 
 
@@ -131,10 +161,12 @@ namespace BlackJack.GameLogic
 
             if (player.hasBlackjack)
                 basePlayerWithBlackJack = player;
-            else 
+            else if (dealer.CanInsurance)
                 basePlayerWithBlackJack = dealer;
+            else
+                basePlayerWithBlackJack = new BasePlayer();
 
-            return player.hasBlackjack || dealer.hasBlackjack;
+            return basePlayerWithBlackJack.ToString() != new BasePlayer().ToString();
         }
 
         #endregion
@@ -148,7 +180,7 @@ namespace BlackJack.GameLogic
                 playerBusted = false;
                 return true;
             }
-            
+
 
             while (true) {
                 BlackJackAction action = HandlePlayerPlay();
@@ -181,7 +213,7 @@ namespace BlackJack.GameLogic
                             /* Draw Card*/
                             player.hand.AddCard(deck.DrawCard());
                             UICardDrawer.DrawHand(player);
-                            
+
                             playerBusted = player.isBust;
                             return true;
                         }
@@ -273,8 +305,6 @@ namespace BlackJack.GameLogic
             UIMoneyDrawer.DrawPlayerBalance(player.getBalance, bettingPool);
             UICardDrawer.ResetCardDrawer();
             UIPrinter.ResetDrawableArea();
-
-            //UIBaseDrawer.CursorToDrawableArea();
         }
     }
 }

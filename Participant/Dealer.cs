@@ -17,6 +17,8 @@ namespace BlackJack.Participant
             return canHit ? BlackJackAction.HIT : BlackJackAction.STAND;
         }
 
+        public bool CanInsurance => hand.CanInsurance;
+
         public override void Hit(Card newCard) {
             if (hand.handSize == 0) {
                 newCard.SetFaceDown();
