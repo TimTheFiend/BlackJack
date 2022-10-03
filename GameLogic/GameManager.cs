@@ -108,7 +108,7 @@ namespace BlackJack.GameLogic
             UIBetDrawer.StartBetPhase();
             while (true) {
 
-                string userInput = "";
+                string? userInput = "";
 
                 //Attempt to read user input.
                 while (String.IsNullOrEmpty(userInput)) {
@@ -221,6 +221,7 @@ namespace BlackJack.GameLogic
                             /* Draw Card*/
                             player.Hit(deck.DrawCard());
                             UICardDrawer.DrawHand(player);
+                            UIPrinter.ResetDrawableArea();
 
                             playerBusted = player.isBust;
                             return true;
@@ -267,26 +268,25 @@ namespace BlackJack.GameLogic
 
         #endregion
 
-        #region Settlement Phase
+
 
         private void HandlePhaseSettlement() {
             if (player.hand > dealer.hand || dealer.isBust) {
                 int payout = 2;
                 player.wallet.AddAmount(bettingPool * payout);
-                //UIMoneyDrawer.UpdateBalance(player.getBalance);
+                UIMoneyDrawer.DrawPlayerBalance(player.getBalance);
             }
-            Console.ReadKey(true);
             UIPrinter.ResetDrawableArea();
+            Console.WriteLine("Press any key to continue...");
+            Console.ReadKey(true);
             UIMoneyDrawer.DrawPlayerBalance(player.getBalance);
             UICardDrawer.ResetCardDrawer();
         }
 
 
-
-        #endregion
-
-        #region Reset Phase
-
+        /// <summary>
+        /// Empty <see cref="BasePlayer"/>'s hands, reset betting pool, clean console.
+        /// </summary>
         private void PrepareNewRound() {
             //Empty player hands
             player.EmptyHand();
@@ -297,18 +297,18 @@ namespace BlackJack.GameLogic
             ResetConsole();
         }
 
-        #endregion
-
-        #region Player's dipped in tar and feathers and thrown out of the Casino Phase
-
+        /// <summary>
+        /// Bust player.
+        /// </summary>
         private void OnPlayerBroke() {
             UIPrinter.OnBlackJackExit();
             Environment.Exit(0);
         }
 
-        #endregion
 
-
+        /// <summary>
+        /// Reset console, and reprints playerbalance.
+        /// </summary>
         private void ResetConsole() {
             UIMoneyDrawer.DrawPlayerBalance(player.getBalance, bettingPool);
             UICardDrawer.ResetCardDrawer();
