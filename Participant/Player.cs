@@ -45,7 +45,7 @@ namespace BlackJack.Participant
                 playerActions.Add(BlackJackAction.STAND);
                 playerActions.Add(BlackJackAction.HIT);
                 //if (hand.CanSplitPairs) playerActions.Add(BlackJackAction.SPLIT_PAIRS);
-                //if (hand.CanDoubleDown) playerActions.Add(BlackJackAction.DOUBLE_DOWN);
+                if (hand.CanDoubleDown) playerActions.Add(BlackJackAction.DOUBLE_DOWN);
 
                 return playerActions;
             }

@@ -9,13 +9,13 @@ namespace BlackJack.Printing
     public static class UIBetDrawer
     {
         public static void StartBetPhase() {
-            UIBaseDrawer.CursorToDrawableArea();
+            UIPrinter.CursorToDrawableArea();
             Console.WriteLine("How much do you want to bet?");
 
         }
 
         public static void RepeatBetPhase() {
-            UIBaseDrawer.ResetLine(UIBaseDrawer.GetCursorTop -1);
+            UIPrinter.ResetLine(UIPrinter.GetCursorTop -1);
             StartBetPhase();
         }
     }

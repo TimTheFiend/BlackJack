@@ -1,14 +1,7 @@
-﻿// See https://aka.ms/new-console-template for more information
+﻿using BlackJack.GameLogic;
 
-using BlackJack;
-using BlackJack.BicycleCards;
-using BlackJack.GameLogic;
-using BlackJack.Participant;
-using BlackJack.Printing;
-using System.Diagnostics;
 
 bool debuggingGameManager = true;
-bool debuggingUIHandler = false;
 
 
 

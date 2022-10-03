@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace BlackJack.Printing
 {
-    public static class UIBaseDrawer
+    public static class UIPrinter
     {
 
         public static ConsoleColor White => ConsoleColor.White;
@@ -93,6 +93,12 @@ namespace BlackJack.Printing
             }
 
             CursorToDrawableArea();
+        }
+
+        public static void OnBlackJackExit() {
+            Clear();
+            CursorToDrawableArea();
+            ConsoleWriter.Writeline("You're leaving? You came to my black jack table, and you're leaving?");
         }
     }
 }

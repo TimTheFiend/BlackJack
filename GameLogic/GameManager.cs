@@ -22,7 +22,6 @@ namespace BlackJack.GameLogic
         private static readonly double _drawDelayInSeconds = 1.5;
         public static int drawDelay => (int)_drawDelayInSeconds * 1000; //Milliseconds
 
-        private delegate bool InputDelegate();
 
         public GameManager() {
             currentPhase = GamePhase.BET;
@@ -37,12 +36,12 @@ namespace BlackJack.GameLogic
         public void PhaseHandler() {
             //Re-initialize round variables
             while (true) {
-                UIBaseDrawer.ResetDrawableArea();
+                UIPrinter.ResetDrawableArea();
                 UIMoneyDrawer.DrawPlayerBalance(player.getBalance, 0);
                 HandlePhaseBet();
                 HandlePhaseShuffle();
                 if (HandlePhaseDeal(out BasePlayer bPlayerBlackJack)) {
-                    UIBaseDrawer.ResetDrawableArea();
+                    UIPrinter.ResetDrawableArea();
                     Console.WriteLine(bPlayerBlackJack.ToString() + " has blackjack");
                 }
                 if (!HandlePhasePlay(out bool playerBusted))
@@ -50,7 +49,6 @@ namespace BlackJack.GameLogic
                 if (!playerBusted) {
                     DealerPlayLoop();
                     HandlePhaseSettlement();
-
                 }
 
                 if (player.wallet.IsBroke)
@@ -89,7 +87,7 @@ namespace BlackJack.GameLogic
 
                     UIMoneyDrawer.DrawPlayerBalance(player.getBalance, bettingPool);
 
-                    UIBaseDrawer.ResetDrawableArea();
+                    UIPrinter.ResetDrawableArea();
                     return;
                 }
                 else {
@@ -144,18 +142,13 @@ namespace BlackJack.GameLogic
         #region Play Phase
         //Returns true is game continues; False is game stops.
         private bool HandlePhasePlay(out bool playerBusted) {
-            UIBaseDrawer.CursorToDrawableArea();
+            UIPrinter.CursorToDrawableArea();
             if (player.hasBlackjack) {
                 Console.WriteLine("YOU HAVE BLACK JACK");
                 playerBusted = false;
                 return true;
             }
             
-            ConsoleWriter.Writeline("=====THE PLAY=====");
-
-            string[] msgs = new string[] {
-                "WHAT DO YOU WANT TO DO"
-            };
 
             while (true) {
                 BlackJackAction action = HandlePlayerPlay();
@@ -178,6 +171,21 @@ namespace BlackJack.GameLogic
                             return true;
                         }
                         continue;
+                    case BlackJackAction.DOUBLE_DOWN:
+                        /* Check if player has the money for this action */
+                        if (player.getBalance - bettingPool >= 0) {
+                            /* Double Bet */
+                            player.wallet.AttemptBet(bettingPool);
+                            bettingPool += bettingPool;
+                            UIMoneyDrawer.DrawPlayerBalance(player.getBalance, bettingPool);
+                            /* Draw Card*/
+                            player.hand.AddCard(deck.DrawCard());
+                            UICardDrawer.DrawHand(player);
+                            
+                            playerBusted = player.isBust;
+                            return true;
+                        }
+                        break;
                     default:
                         //END GAME
                         throw new Exception("GameManager.HandlePhasePlay() -> Went to Default");
@@ -186,7 +194,7 @@ namespace BlackJack.GameLogic
         }
 
         private BlackJackAction HandlePlayerPlay() {
-            UIBaseDrawer.CursorToDrawableArea();
+            UIPrinter.CursorToDrawableArea();
             List<BlackJackAction> actions = player.GetPlayerActions;
 
             for (int i = 0; i < actions.Count; i++) {
@@ -227,7 +235,8 @@ namespace BlackJack.GameLogic
                 player.wallet.AddAmount(bettingPool * payout);
                 //UIMoneyDrawer.UpdateBalance(player.getBalance);
             }
-            UIBaseDrawer.ResetDrawableArea();
+            Console.ReadKey(true);
+            UIPrinter.ResetDrawableArea();
             UIMoneyDrawer.DrawPlayerBalance(player.getBalance);
             UICardDrawer.ResetCardDrawer();
         }
@@ -245,15 +254,7 @@ namespace BlackJack.GameLogic
             //Reset bettingPool
             bettingPool = 0;
 
-            //UIHandler.UpdateBalance(player.getBalance);
-
             ResetConsole();
-            Console.WriteLine("Press any key to continue...");
-            Console.ReadKey(true);
-
-            //ResetConsole();
-            ////Clear Console
-            //ConsoleWriter.Clear();
         }
 
         #endregion
@@ -261,7 +262,7 @@ namespace BlackJack.GameLogic
         #region Player's dipped in tar and feathers and thrown out of the Casino Phase
 
         private void OnPlayerBroke() {
-            ConsoleWriter.OnBlackJackExit();
+            UIPrinter.OnBlackJackExit();
             Environment.Exit(0);
         }
 
@@ -271,7 +272,7 @@ namespace BlackJack.GameLogic
         private void ResetConsole() {
             UIMoneyDrawer.DrawPlayerBalance(player.getBalance, bettingPool);
             UICardDrawer.ResetCardDrawer();
-            UIBaseDrawer.ResetDrawableArea();
+            UIPrinter.ResetDrawableArea();
 
             //UIBaseDrawer.CursorToDrawableArea();
         }

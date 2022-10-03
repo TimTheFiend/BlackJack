@@ -30,7 +30,7 @@ namespace BlackJack.Printing
 
         
         public static void OnClear() {
-            UIBaseDrawer.ResetLines(wallRowIndex[0], wallRowIndex[1]);
+            UIPrinter.ResetLines(wallRowIndex[0], wallRowIndex[1]);
         }
 
 
@@ -39,12 +39,12 @@ namespace BlackJack.Printing
 
         public static void DrawPlayerBalance(int balanceAmount, int betAmount = 0) {
             OnClear();
-            UIBaseDrawer.Color = UIBaseDrawer.White;
+            UIPrinter.Color = UIPrinter.White;
             string _playerBalanceText = $"# {playerBalance}{balanceAmount.ToString()} #";
 
             for (int i = 0; i < _playerBalanceText.Length; i++) {
                 foreach (int row in wallRowIndex) {
-                    UIBaseDrawer.SetCursor(row, i, wallChar);
+                    UIPrinter.SetCursor(row, i, wallChar);
                 }
             }
 
@@ -53,16 +53,16 @@ namespace BlackJack.Printing
 
 
             /* Print Balance information */
-            UIBaseDrawer.SetCursor(playerBalanceRowIndex, 0, _playerBalanceText);
+            UIPrinter.SetCursor(playerBalanceRowIndex, 0, _playerBalanceText);
             
             /* Get Bet Print location */
-            int balanceAmountPosition = UIBaseDrawer.GetCursorLeft - 2 - betAmount.ToString().Length; //-2 = " #"; -.Length for last digit position
+            int balanceAmountPosition = UIPrinter.GetCursorLeft - 2 - betAmount.ToString().Length; //-2 = " #"; -.Length for last digit position
 
             /* Player Bet */
-            UIBaseDrawer.ResetLine(playerBetRowIndex);
-            UIBaseDrawer.SetCursor(playerBetRowIndex, 0, $"# {playerBet}");
-            UIBaseDrawer.SetCursor(playerBetRowIndex, dollarSignIndex, "$");
-            UIBaseDrawer.SetCursor(playerBetRowIndex, balanceAmountPosition, $"{betAmount} #");
+            UIPrinter.ResetLine(playerBetRowIndex);
+            UIPrinter.SetCursor(playerBetRowIndex, 0, $"# {playerBet}");
+            UIPrinter.SetCursor(playerBetRowIndex, dollarSignIndex, "$");
+            UIPrinter.SetCursor(playerBetRowIndex, balanceAmountPosition, $"{betAmount} #");
         }
 
         #endregion Draw Balance Functions

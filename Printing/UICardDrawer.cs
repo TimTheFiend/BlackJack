@@ -12,7 +12,7 @@ namespace BlackJack.Printing
     public static class UICardDrawer
     {
         /* Delay between card draw */
-        private static readonly double _drawDelayInSeconds = 1.5;
+        private static readonly double _drawDelayInSeconds = 0.95;
         private static int drawDelay => (int)_drawDelayInSeconds * 1000; //Milliseconds
 
         /* Console Top position */
@@ -29,13 +29,13 @@ namespace BlackJack.Printing
 
         public static void DrawDeckSize(int deckSize) {
             /* Reset Console information */
-            UIBaseDrawer.SetCursor(rowDeck);
+            UIPrinter.SetCursor(rowDeck);
             Color = white;
 
 
             CursorTop = rowDeck;
 
-            Console.Write($"{cardsRemaining}\t{deckSize}");
+            Console.Write($"{cardsRemaining} {deckSize}");
 
         }
 
@@ -57,7 +57,7 @@ namespace BlackJack.Printing
 
             /* Draw name */
             Color = cColor;
-            UIBaseDrawer.SetCursor(cursorTopPos, 0, bPlayer.ToString());
+            UIPrinter.SetCursor(cursorTopPos, 0, bPlayer.ToString());
 
 
             /* Draw HandValue */
@@ -96,9 +96,9 @@ namespace BlackJack.Printing
         }
 
         public static void ResetCardDrawer() {
-            UIBaseDrawer.ResetLine(rowDeck);
-            UIBaseDrawer.ResetLine(rowPlayer);
-            UIBaseDrawer.ResetLine(rowDealer);
+            UIPrinter.ResetLine(rowDeck);
+            UIPrinter.ResetLine(rowPlayer);
+            UIPrinter.ResetLine(rowDealer);
         }
     }
 }
