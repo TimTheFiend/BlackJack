@@ -11,12 +11,18 @@ namespace BlackJack.BicycleCards
     {
         public List<Card> cards { get; private set; }
         private int cardsLeft => cards.Count;
-        public bool isReshuffleNeeded => cardsLeft < 312 / 2;  //Value is arbitrary.
 
         /// <summary>
         /// <em>"The six-deck game (312 cards) is the most popular" [..]</em><br></br>Makes it feel more fair.
         /// </summary>
         private readonly int amountOfDecks = 6;
+        
+        /// <summary>
+        /// Returns true if <see cref="cards"/> size goes below half the original amount.
+        /// </summary>
+        public bool isReshuffleNeeded => cardsLeft < (52 * amountOfDecks) / 2;  //Value is arbitrary.
+
+
 
         public Deck()
         {

@@ -12,7 +12,7 @@ namespace BlackJack.Printing
     public static class UICardDrawer
     {
         /* Delay between card draw */
-        private static readonly double _drawDelayInSeconds = 0.95;
+        private static readonly double _drawDelayInSeconds = 1;
         private static int drawDelay => (int)_drawDelayInSeconds * 1000; //Milliseconds
 
         /* Console Top position */

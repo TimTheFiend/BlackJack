@@ -6,7 +6,6 @@ namespace BlackJack.GameLogic
 {
     public class GameManager
     {
-        GamePhase currentPhase { get; set; }
         Deck deck;
 
         Player player;
@@ -19,7 +18,6 @@ namespace BlackJack.GameLogic
 
 
         public GameManager() {
-            currentPhase = GamePhase.BET;
             //DECK
             deck = new Deck();
             deck.ShuffleDeck();
@@ -28,6 +26,8 @@ namespace BlackJack.GameLogic
             player = new Player();
         }
 
+
+        //TODO This is so fucking ugly jesus christ.
         public void PhaseHandler() {
             //Re-initialize round variables
             while (true) {
@@ -66,11 +66,19 @@ namespace BlackJack.GameLogic
         }
 
 
+
+        /// <summary>
+        /// Prints information to the player regarding Insurance, assumes the player will always bet the optimal amount.
+        /// </summary>
+        /// <returns><c>true</c> if player buys Insurance <bold>AND</bold> the dealer has blackjack; otherwise <c>false</c>.</returns>
         private bool HandleInsurance() {
-            int maxInsuranceBet = (int)bettingPool / 2;
+            int maxInsuranceBet = (int)bettingPool / 2;  // No reason to ask for bet, anything below half loses you money.
+            
+            /* Print Insurance info to the playe. */
             UIPrinter.ResetDrawableArea();
             Console.Write($"Would you like to buy insurance? Max bet: {maxInsuranceBet}\nAnswer with Y/N");
 
+            /* Read the user's input and handle the action. */
             while (true) {
                 var input = Console.ReadKey(true);
                 string inputAsString = input.KeyChar.ToString().ToLower();
@@ -92,13 +100,12 @@ namespace BlackJack.GameLogic
 
 
 
-        #region Bet Phase
+
+        /// <summary>
+        /// Reads player input and attempts to remove said amount from player's wallet.
+        /// </summary>
         private void HandlePhaseBet() {
             UIBetDrawer.StartBetPhase();
-            HandlePlayerBet();
-        }
-
-        private void HandlePlayerBet() {
             while (true) {
 
                 string userInput = "";
@@ -125,9 +132,11 @@ namespace BlackJack.GameLogic
                 }
             }
         }
-        #endregion
 
-        #region Shuffle Phase
+
+        /// <summary>
+        /// Shuffles <see cref="deck"/>, and generates a new deck if the deck-size goes below half the starting amount.
+        /// </summary>
         private void HandlePhaseShuffle() {
             if (deck.isReshuffleNeeded) {
                 ConsoleWriter.OnReshuffle();
@@ -135,7 +144,6 @@ namespace BlackJack.GameLogic
             }
             deck.ShuffleDeck();
         }
-        #endregion
 
         #region Deal Phase
         /// <summary>

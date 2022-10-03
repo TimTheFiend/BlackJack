@@ -23,6 +23,7 @@ namespace BlackJack.Participant
             return "PLAYER";
         }
 
+        //TODO
         public Player OnSplittingPairs() {
             Player split = (Player)this.Clone();
             Card splitPair = hand.GetSplitPair();
