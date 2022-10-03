@@ -12,7 +12,7 @@ bool debuggingUIHandler = false;
 
 
 if (debuggingUIHandler) {
-    UIHandler.UpdateBalance(20000000, 6500);
+    UIMoneyDrawer.UpdateBalance(20000000, 6500);
     
 }
 

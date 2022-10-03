@@ -37,9 +37,8 @@ namespace BlackJack.GameLogic
         public void PhaseHandler() {
             //Re-initialize round variables
             while (true) {
-                UIHandler.UpdateBalance(player.getBalance);
+                UIMoneyDrawer.DrawPlayerBalance(player.getBalance);
                 HandlePhaseBet();
-                //UIHandler.UpdateBalance(player.getBalance);
                 HandlePhaseShuffle();
                 if (HandlePhaseDeal(out BasePlayer bPlayerBlackJack)) {
                     Console.WriteLine(bPlayerBlackJack.ToString() + " has blackjack");
@@ -88,8 +87,8 @@ namespace BlackJack.GameLogic
                         continue;
                     }
                     bettingPool = player.wallet.AttemptBet(betAmount);
-                    UIHandler.UpdateBalance(player.getBalance, bettingPool);
-                    //ConsoleWriter.Writeline($"=====BET ACCEPTED=====\nCurrent balance:\t${player.wallet.balance}\nCurrent bet:\t\t${bettingPool}");
+
+                    UIMoneyDrawer.DrawPlayerBalance(player.getBalance, bettingPool);
                     return;
                 }
             }
@@ -117,8 +116,7 @@ namespace BlackJack.GameLogic
             for (int i = 0; i < startingHandSize; i++) {
                 //Player gets card
                 player.hand.AddCard(deck.DrawCard());
-                //ConsoleWriter.WritePlayerHand(player.ToString(), player.hand.getTotalHandValue, player.getHand);
-                UIHandler.DrawPlayerHand(player.hand.getCardsOnHand);
+                UICardDrawer.DrawHand(player);
 
                 Card dealerCard = deck.DrawCard();
 
@@ -126,7 +124,7 @@ namespace BlackJack.GameLogic
                     dealerCard = dealerCard.SetFaceDown();
                 }
                 dealer.hand.AddCard(dealerCard);
-                ConsoleWriter.WritePlayerHand(dealer.ToString(), dealer.hand.getTotalHandValue, dealer.getHand);
+                UICardDrawer.DrawHand(dealer);
             }
 
             if (player.hasBlackjack)
@@ -167,7 +165,7 @@ namespace BlackJack.GameLogic
                     case BlackJackAction.HIT:
                         player.hand.AddCard(deck.DrawCard());
                         //ConsoleWriter.WritePlayerHand(player.ToString(), player.hand.getTotalHandValue, player.getHand);
-                        UIHandler.DrawPlayerHand(player.hand.getCardsOnHand);
+                        //UIMoneyDrawer.DrawPlayerHand(player.hand.getCardsOnHand);
                         if (player.isBust) {
                             ConsoleWriter.Writeline("You're a buster");
                             playerBusted = true;
@@ -224,7 +222,8 @@ namespace BlackJack.GameLogic
             if (player.hand > dealer.hand || dealer.isBust) {
                 int payout = 2;
                 player.wallet.AddAmount(bettingPool * payout);
-                UIHandler.UpdateBalance(player.getBalance);
+                //UIMoneyDrawer.UpdateBalance(player.getBalance);
+                UIMoneyDrawer.DrawPlayerBalance(player.getBalance);
             }
         }
 
@@ -245,7 +244,7 @@ namespace BlackJack.GameLogic
             Console.WriteLine("Press any key to continue...");
             Console.ReadKey(true);
 
-            UIHandler.ClearUI();
+            UIMoneyDrawer.OnClear();
             ////Clear Console
             //ConsoleWriter.Clear();
         }

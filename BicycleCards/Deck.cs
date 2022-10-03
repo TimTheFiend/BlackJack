@@ -62,6 +62,8 @@ namespace BlackJack.BicycleCards
             Card drawnCard = cards.ElementAt(pos);
             cards.RemoveAt(pos);
 
+            UICardDrawer.DrawDeckSize(cardsLeft);
+
             return drawnCard;
         }
 
