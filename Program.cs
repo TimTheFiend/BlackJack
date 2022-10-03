@@ -11,16 +11,7 @@ bool debuggingGameManager = true;
 bool debuggingUIHandler = false;
 
 
-if (debuggingUIHandler) {
-    UIMoneyDrawer.UpdateBalance(20000000, 6500);
-    
-}
 
-Console.WriteLine();
-Console.WriteLine();
-Console.WriteLine();
-Console.WriteLine();
-Console.WriteLine();
 if (debuggingGameManager) {
     GameManager gm = new GameManager();
 

@@ -37,12 +37,13 @@ namespace BlackJack.GameLogic
         public void PhaseHandler() {
             //Re-initialize round variables
             while (true) {
-                UIMoneyDrawer.DrawPlayerBalance(player.getBalance);
+                UIBaseDrawer.ResetDrawableArea();
+                UIMoneyDrawer.DrawPlayerBalance(player.getBalance, 0);
                 HandlePhaseBet();
                 HandlePhaseShuffle();
                 if (HandlePhaseDeal(out BasePlayer bPlayerBlackJack)) {
+                    UIBaseDrawer.ResetDrawableArea();
                     Console.WriteLine(bPlayerBlackJack.ToString() + " has blackjack");
-                    //TODO HANDLE NATURAL BLACKJACK CASE
                 }
                 if (!HandlePhasePlay(out bool playerBusted))
                     return;
@@ -65,23 +66,21 @@ namespace BlackJack.GameLogic
 
         #region Bet Phase
         private void HandlePhaseBet() {
+            UIBetDrawer.StartBetPhase();
             HandlePlayerBet();
         }
 
         private void HandlePlayerBet() {
             while (true) {
-                ConsoleWriter.Writeline("How much do you want to bet?");
 
                 string userInput = "";
 
+                //Attempt to read user input.
                 while (String.IsNullOrEmpty(userInput)) {
                     userInput = Console.ReadLine();
                 }
 
-
-                if (String.IsNullOrEmpty(userInput)) {
-                    continue;
-                }
+                //Check if input is valid.
                 if (int.TryParse(userInput, out int betAmount)) {
                     if (betAmount <= 0) {
                         continue;
@@ -89,7 +88,12 @@ namespace BlackJack.GameLogic
                     bettingPool = player.wallet.AttemptBet(betAmount);
 
                     UIMoneyDrawer.DrawPlayerBalance(player.getBalance, bettingPool);
+
+                    UIBaseDrawer.ResetDrawableArea();
                     return;
+                }
+                else {
+                    UIBetDrawer.RepeatBetPhase();
                 }
             }
         }
@@ -110,7 +114,7 @@ namespace BlackJack.GameLogic
         /// Deals <see cref="Card"/>s from <see cref="GameManager.deck"/> 
         /// </summary>
         private bool HandlePhaseDeal(out BasePlayer basePlayerWithBlackJack) {
-            ConsoleWriter.Writeline("====DEAL====");
+            //ConsoleWriter.Writeline("====DEAL====");
             int startingHandSize = 2;
 
             for (int i = 0; i < startingHandSize; i++) {
@@ -140,6 +144,7 @@ namespace BlackJack.GameLogic
         #region Play Phase
         //Returns true is game continues; False is game stops.
         private bool HandlePhasePlay(out bool playerBusted) {
+            UIBaseDrawer.CursorToDrawableArea();
             if (player.hasBlackjack) {
                 Console.WriteLine("YOU HAVE BLACK JACK");
                 playerBusted = false;
@@ -166,16 +171,13 @@ namespace BlackJack.GameLogic
                         player.hand.AddCard(deck.DrawCard());
                         //ConsoleWriter.WritePlayerHand(player.ToString(), player.hand.getTotalHandValue, player.getHand);
                         //UIMoneyDrawer.DrawPlayerHand(player.hand.getCardsOnHand);
+                        UICardDrawer.DrawHand(player);
                         if (player.isBust) {
                             ConsoleWriter.Writeline("You're a buster");
                             playerBusted = true;
                             return true;
                         }
                         continue;
-                    case BlackJackAction.SPLIT_PAIRS:
-                        Player _player = player.OnSplittingPairs();
-                        Console.WriteLine();
-                        break;
                     default:
                         //END GAME
                         throw new Exception("GameManager.HandlePhasePlay() -> Went to Default");
@@ -184,6 +186,7 @@ namespace BlackJack.GameLogic
         }
 
         private BlackJackAction HandlePlayerPlay() {
+            UIBaseDrawer.CursorToDrawableArea();
             List<BlackJackAction> actions = player.GetPlayerActions;
 
             for (int i = 0; i < actions.Count; i++) {
@@ -203,12 +206,12 @@ namespace BlackJack.GameLogic
         public bool DealerPlayLoop() {
             //Dealer reveals the facedown card
             dealer.hand.TurnCardFaceUp();
-            ConsoleWriter.Write("DEALER REVEAL:");
-            ConsoleWriter.WriteCard(dealer.getHand);
+
+            //ConsoleWriter.WriteCard(dealer.getHand);
+            UICardDrawer.DrawHand(dealer);
             while (dealer.canHit) {
                 dealer.Hit(deck.DrawCard());
-                ConsoleWriter.WritePlayerHand(dealer.ToString(), dealer.hand.getTotalHandValue, dealer.getHand);
-
+                UICardDrawer.DrawHand(dealer);
             }
             return dealer.isBust;
         }
@@ -223,8 +226,10 @@ namespace BlackJack.GameLogic
                 int payout = 2;
                 player.wallet.AddAmount(bettingPool * payout);
                 //UIMoneyDrawer.UpdateBalance(player.getBalance);
-                UIMoneyDrawer.DrawPlayerBalance(player.getBalance);
             }
+            UIBaseDrawer.ResetDrawableArea();
+            UIMoneyDrawer.DrawPlayerBalance(player.getBalance);
+            UICardDrawer.ResetCardDrawer();
         }
 
 
@@ -241,10 +246,12 @@ namespace BlackJack.GameLogic
             bettingPool = 0;
 
             //UIHandler.UpdateBalance(player.getBalance);
+
+            ResetConsole();
             Console.WriteLine("Press any key to continue...");
             Console.ReadKey(true);
 
-            UIMoneyDrawer.OnClear();
+            //ResetConsole();
             ////Clear Console
             //ConsoleWriter.Clear();
         }
@@ -260,5 +267,13 @@ namespace BlackJack.GameLogic
 
         #endregion
 
+
+        private void ResetConsole() {
+            UIMoneyDrawer.DrawPlayerBalance(player.getBalance, bettingPool);
+            UICardDrawer.ResetCardDrawer();
+            UIBaseDrawer.ResetDrawableArea();
+
+            //UIBaseDrawer.CursorToDrawableArea();
+        }
     }
 }

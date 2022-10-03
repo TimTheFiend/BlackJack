@@ -29,7 +29,7 @@ namespace BlackJack.Printing
 
         public static void DrawDeckSize(int deckSize) {
             /* Reset Console information */
-            ResetCursorLeft();
+            UIBaseDrawer.SetCursor(rowDeck);
             Color = white;
 
 
@@ -56,15 +56,12 @@ namespace BlackJack.Printing
             }
 
             /* Draw name */
-            CursorTop = cursorTopPos;
             Color = cColor;
-
-            Console.Write(bPlayer.ToString());
+            UIBaseDrawer.SetCursor(cursorTopPos, 0, bPlayer.ToString());
 
 
             /* Draw HandValue */
             Color = white;
-
             Console.Write($" ({bPlayer.getHandValue}) : ");
 
             /* Draw Hand */
@@ -96,6 +93,12 @@ namespace BlackJack.Printing
 
         private static void ResetCursorLeft() {
             CursorLeft = 0;
+        }
+
+        public static void ResetCardDrawer() {
+            UIBaseDrawer.ResetLine(rowDeck);
+            UIBaseDrawer.ResetLine(rowPlayer);
+            UIBaseDrawer.ResetLine(rowDealer);
         }
     }
 }

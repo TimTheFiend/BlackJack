@@ -15,23 +15,23 @@ namespace BlackJack.BicycleCards
 
         public Deck()
         {
-            GenerateDeck();
+            GenerateDeck(6);  //"The six-deck game (312 cards) is the most popular"
         }
 
         /// <summary>
         /// Initialises <see cref="cards"/>, and adds a standard deck of <see cref="Card"/>-object with a <see cref="CardValue"/> and <see cref="CardSuit"/>.
         /// </summary>
-        private void GenerateDeck()
-        {
+        private void GenerateDeck(int numberOfDecks = 1) {
             cards = new List<Card>();
 
-            foreach (CardSuit suit in Enum.GetValues(typeof(CardSuit)))
-            {
-                foreach (CardValue value in Enum.GetValues(typeof(CardValue)))
-                {
-                    cards.Add(new Card(suit, value));
+            for (int i = 0; i < numberOfDecks; i++) {
+                foreach (CardSuit suit in Enum.GetValues(typeof(CardSuit))) {
+                    foreach (CardValue value in Enum.GetValues(typeof(CardValue))) {
+                        cards.Add(new Card(suit, value));
+                    }
                 }
             }
+
         }
 
         /// <summary>

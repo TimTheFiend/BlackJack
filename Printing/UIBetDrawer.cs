@@ -8,12 +8,15 @@ namespace BlackJack.Printing
 {
     public static class UIBetDrawer
     {
-        
-        private static readonly int seperatorTopPos = 8;
-        private static readonly int startTopPos = 10;
+        public static void StartBetPhase() {
+            UIBaseDrawer.CursorToDrawableArea();
+            Console.WriteLine("How much do you want to bet?");
 
-        public static void DrawSeparator() {
-            
+        }
+
+        public static void RepeatBetPhase() {
+            UIBaseDrawer.ResetLine(UIBaseDrawer.GetCursorTop -1);
+            StartBetPhase();
         }
     }
 }

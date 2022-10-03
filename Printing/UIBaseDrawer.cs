@@ -13,6 +13,7 @@ namespace BlackJack.Printing
         public static ConsoleColor Green => ConsoleColor.Green;
         public static ConsoleColor Blue => ConsoleColor.Blue;
 
+        private static readonly int ResetLength = 90;
 
         public static int CursorLeft {
             set {
@@ -32,6 +33,13 @@ namespace BlackJack.Printing
             }
         }
 
+        /* Getters */
+        public static int GetCursorLeft => Console.CursorLeft;
+        public static int GetCursorTop => Console.CursorTop;
+        public static int GetTopDrawable => 8;
+        public static int GetBottomDrawable => 15;
+
+
         public static void Clear() {
             Console.Clear();
 
@@ -39,7 +47,8 @@ namespace BlackJack.Printing
             UIMoneyDrawer.OnClear();
         }
 
-        public static void SetCursor(int top, int left) {
+        #region SetCursor
+        public static void SetCursor(int top, int left = 0) {
             Console.SetCursorPosition(left, top);
         }
 
@@ -57,12 +66,33 @@ namespace BlackJack.Printing
             SetCursor(top, left);
             Console.Write(text.ToString());
         }
+        #endregion
+
+        public static void CursorToDrawableArea() {
+            SetCursor(GetTopDrawable, 0);
+        }
 
         public static void ResetCursor() {
             SetCursor(0, 0);
         }
 
-        public static int GetCursorLeft => Console.CursorLeft;
-        public static int GetCursorTop => Console.CursorTop;
+        public static void ResetLine(int top) {
+            SetCursor(top, 0, "".PadRight(ResetLength, ' '));
+        }
+
+        public static void ResetLines(int start, int end) {
+            for (int i = start; i < end + 1; i++) {
+                ResetLine(i);
+            }
+        }
+
+
+        public static void ResetDrawableArea() {
+            for (int i = GetTopDrawable; i < GetBottomDrawable + 1; i++) {
+                ResetLine(i);
+            }
+
+            CursorToDrawableArea();
+        }
     }
 }
