@@ -7,7 +7,7 @@
         HIT = 2,
         DOUBLE_DOWN = 3,
         SPLIT_PAIRS = 4,
-        BUY_INSURANCE = 5,
+        BUY_INSURANCE = 5,  //NOTE: Not really used.
         BET = 6,
         EXIT_GAME = 7
     }

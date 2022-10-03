@@ -16,7 +16,6 @@ namespace BlackJack.Participant
 
         public List<Card> getHand => cards;
 
-        public int handValue { get; private set; }
         public int handSize => cards.Count;
 
         /* Magic Numbers */

@@ -37,9 +37,9 @@ namespace BlackJack.Participant
 
         public int getBalance => wallet.balance;
 
-        public string getBalanceString => "$" + getBalance;
-
-
+        /// <summary>
+        /// Returns the <see cref="BlackJackAction"/> that are available based on starting hand.
+        /// </summary>
         public List<BlackJackAction> GetPlayerActions {
             get {
                 List<BlackJackAction> playerActions = new List<BlackJackAction>();

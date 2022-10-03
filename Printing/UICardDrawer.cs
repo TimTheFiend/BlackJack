@@ -19,7 +19,7 @@ namespace BlackJack.Printing
         private static readonly int rowDeck = 4;
         private static readonly int rowPlayer = 5;
         private static readonly int rowDealer = 6;
-
+        /* Colors */
         private static ConsoleColor colorPlayer = ConsoleColor.Cyan;
         private static ConsoleColor colorDealer = ConsoleColor.Magenta;
         private static ConsoleColor white = ConsoleColor.White;
@@ -27,18 +27,24 @@ namespace BlackJack.Printing
         private static readonly string cardsRemaining = "Cards remaining:";
 
 
+        /// <summary>
+        /// Writes the remaining cards in the deck to the console.
+        /// </summary>
+        /// <param name="deckSize">Cards left in deck.</param>
         public static void DrawDeckSize(int deckSize) {
             /* Reset Console information */
             UIPrinter.SetCursor(rowDeck);
-            Color = white;
-
-
-            CursorTop = rowDeck;
-
+            UIPrinter.Color = white;
+            /* Write information */
+            UIPrinter.CursorTop = rowDeck;
             Console.Write($"{cardsRemaining} {deckSize}");
 
         }
 
+        /// <summary>
+        /// Updates the hand of the player who drew a card.
+        /// </summary>
+        /// <param name="bPlayer"></param>
         public static void DrawHand(BasePlayer bPlayer) {
             /* Reset CursorLeft */
             ResetCursorLeft();
@@ -56,45 +62,34 @@ namespace BlackJack.Printing
             }
 
             /* Draw name */
-            Color = cColor;
+            UIPrinter.Color = cColor;
             UIPrinter.SetCursor(cursorTopPos, 0, bPlayer.ToString());
 
 
             /* Draw HandValue */
-            Color = white;
+            UIPrinter.Color = white;
             Console.Write($" ({bPlayer.getHandValue}) : ");
 
             /* Draw Hand */
             foreach (Card card in bPlayer.getHand) {
-                Color = card.getColor;
+                UIPrinter.Color = card.getColor;
                 Console.Write($"[{card.getValueAndSuit}]");
             }
 
             Thread.Sleep(drawDelay);
         }
 
-        private static ConsoleColor Color {
-            set {
-                Console.ForegroundColor = value;
-            }
-        }
 
-        private static int CursorLeft {
-            set {
-                Console.CursorLeft = value;
-            }
-        }
-
-        private static int CursorTop {
-            set {
-                Console.CursorTop = value;
-            }
-        }
-
+        /// <summary>
+        /// Reset Console.CursorLeft position to be on the start of a line line.
+        /// </summary>
         private static void ResetCursorLeft() {
-            CursorLeft = 0;
+            UIPrinter.CursorLeft = 0;
         }
 
+        /// <summary>
+        /// Cleans all the lines used by <see cref="UICardDrawer"/>.
+        /// </summary>
         public static void ResetCardDrawer() {
             UIPrinter.ResetLine(rowDeck);
             UIPrinter.ResetLine(rowPlayer);
